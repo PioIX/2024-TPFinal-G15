@@ -1,15 +1,12 @@
 "use client"
-import Button from "@/components/Button";
-import Input from "@/components/Input";
 import Message from "@/components/Message";
 import Button_theme from "@/components/Button_theme";
 import InputLogin from "@/components/InputLogin";
-import NewChat from "@/components/NewChat";
 import InputNC from "@/components/InputNC";
+import Profesor from "@/components/Profesor";
 import { useEffect, useState } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import styles from "./page.module.css";
-import clsx from "clsx";
 
 export default function home(){
     const [theme, setTheme] = useState("light");
@@ -68,6 +65,7 @@ export default function home(){
                     alert("Registro realizado correctamente")
                     setUsername("")
                     setPassword("")
+                    handleContador()
                 }
             } else {
                 console.log(result)
@@ -102,6 +100,7 @@ export default function home(){
                 alert("Inicio de sesión correcto")
                 setUsername("")
                 setPassword("")
+                handleContador()
             } else {
                 alert(result.message)
             }
@@ -121,67 +120,6 @@ export default function home(){
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     };
-
-    // async function getChatList() {
-    //     if (actualUser.length !== 0){
-    //         const data = {
-    //             userId: actualUser[0]
-    //         }
-            
-    //         const response = await fetch('http://localhost:4000/getChats', {
-    //             method: 'POST',
-    //             headers: {
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(data),
-    //         });
-            
-    //         if (!response.ok) throw new Error('Error en la respuesta de la red');
-    //         const result = await response.json();
-            
-    //         for (let i in result){
-    //             const data1 = {
-    //                 chatId: result[i].chatId,
-    //             }
-                
-    //             const response1 = await fetch('http://localhost:4000/getMessagesChat', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     Accept: 'application/json',
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //                 body: JSON.stringify(data1),
-    //             });
-                
-    //             if (!response1.ok) throw new Error('Error en la respuesta de la red');
-    //             const result2 = await response1.json();
-
-    //             result[i].messages = result2.messages
-    //         }
-
-    //         setChats(result)
-    //     }
-    // }
-
-    function loadChatList() {
-        const chatList = document.getElementById('chatList');
-        if (!chatList) return;
-        chatList.innerHTML = "";
-        chats.forEach(chat => {
-            if (chat.userId == actualUser[0]) {
-                const chatItem = document.createElement('div');
-                chatItem.className = styles.chats;
-                chatItem.textContent = chat.name;
-                chatItem.onclick = () => selectChat(chat);
-                chatList.appendChild(chatItem);
-            }
-        });
-    }
-
-    useEffect(() => {
-        loadChatList();
-    }, [chats, newChat]);
     
     function selectChat(chat) {
         socket.emit("leaveRoom", {room:actualChat})
@@ -360,20 +298,6 @@ export default function home(){
         setNewChat(false)
     }
 
-    function emitNewRoom(){
-        socket.emit("newRoom", {username: newChatUser})
-    }
-
-    const [newRoomUser, setNewRoomUser] = useState()
-
-    useEffect(() => {
-        if (newRoomUser != undefined) {
-            if (newRoomUser.user === actualUser[1]){
-                // getChatList()
-            }
-        }
-    }, [newRoomUser]);
-
     //MARK: Socket
     const { socket, isConnected } = useSocket();
     
@@ -405,16 +329,29 @@ export default function home(){
     }, [socket, isConnected]);
 
     const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
+    const [contador, setContador] = useState(false)
+    const [profesores, setProfesores] = useState([{name: "Marche", description: "Bondadoso"}, {name: "Facón", description: "Experto en desaprobar alumnos"}, {name: "Rivi", description: "Paciente"}])
+    const [profesor, setProfesor] = useState(0)
+
+    function handleContador(){
+        setContador(true)
+    }
+
+    function handleRight(){
+        if (profesores.length - 1 != profesor) {
+            setProfesor(profesor+1)
+        }
+    }
       
     useEffect(() => {
-        if (seconds > 0) {
+        if (seconds > 0 && contador === true) {
         const timer = setInterval(() => {
             setSeconds(prevSeconds => prevSeconds - 1);
         }, 1000);
       
         return () => clearInterval(timer); // Limpiar el intervalo al desmontar
           }
-        }, [seconds]);
+        }, [seconds, contador]);
       
     const formatTime = (sec) => {
         const minutes = Math.floor(sec / 60);
@@ -447,13 +384,10 @@ export default function home(){
                 <>
                     <div className={styles.bodyNewChat}>
                         <div className={styles.newChat}>
-                            <h2>Usuario del nuevo chat</h2>
-                            <InputNC type={"text"} onChange={(event) => setNewChatUser(event.target.value)} value={newChatUser} placeholder={"Ingrese el usuario"}/>
-                            <h2>Nombre del nuevo chat</h2>
-                            <InputNC type={"text"} onChange={(event) => setNewChatName(event.target.value)} value={newChatName} placeholder={"Ingrese el nombre"}/>
+                            <Profesor name={profesores[profesor].name} description={profesores[profesor].description}/>
                             <div>
-                                <button onClick={addChat}>Agregar chat</button>
-                                <button onClick={cancelNewChat}>Cancelar</button>
+                                <button onClick={handleRight}>siguiente</button>
+                                <button onClick={handleLeft}>anterior</button>
                             </div>
                         </div>
                     </div>
