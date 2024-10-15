@@ -122,47 +122,47 @@ export default function home(){
         setPassword(e.target.value);
     };
 
-    async function getChatList() {
-        if (actualUser.length !== 0){
-            const data = {
-                userId: actualUser[0]
-            }
+    // async function getChatList() {
+    //     if (actualUser.length !== 0){
+    //         const data = {
+    //             userId: actualUser[0]
+    //         }
             
-            const response = await fetch('http://localhost:4000/getChats', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+    //         const response = await fetch('http://localhost:4000/getChats', {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(data),
+    //         });
             
-            if (!response.ok) throw new Error('Error en la respuesta de la red');
-            const result = await response.json();
+    //         if (!response.ok) throw new Error('Error en la respuesta de la red');
+    //         const result = await response.json();
             
-            for (let i in result){
-                const data1 = {
-                    chatId: result[i].chatId,
-                }
+    //         for (let i in result){
+    //             const data1 = {
+    //                 chatId: result[i].chatId,
+    //             }
                 
-                const response1 = await fetch('http://localhost:4000/getMessagesChat', {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data1),
-                });
+    //             const response1 = await fetch('http://localhost:4000/getMessagesChat', {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     Accept: 'application/json',
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //                 body: JSON.stringify(data1),
+    //             });
                 
-                if (!response1.ok) throw new Error('Error en la respuesta de la red');
-                const result2 = await response1.json();
+    //             if (!response1.ok) throw new Error('Error en la respuesta de la red');
+    //             const result2 = await response1.json();
 
-                result[i].messages = result2.messages
-            }
+    //             result[i].messages = result2.messages
+    //         }
 
-            setChats(result)
-        }
-    }
+    //         setChats(result)
+    //     }
+    // }
 
     function loadChatList() {
         const chatList = document.getElementById('chatList');
@@ -188,13 +188,13 @@ export default function home(){
         setContactName(chat.name);
         setActualChat(chat.chatId)
         // getMessages(chat)
-        getChatList()
+        // getChatList()
         console.log(chats)
         socket.emit("joinRoom", {room:chat.chatId})
     }
     
     useEffect(() => {
-        getChatList();
+        // getChatList();
     }, [actualUser]);
     
     const [newMessage, setNewMessage] = useState()
@@ -343,7 +343,7 @@ export default function home(){
                 }
             }
             setNewChat(false)
-            getChatList()
+            // getChatList()
         } else {
             alert("Completar la información")
         }
@@ -369,7 +369,7 @@ export default function home(){
     useEffect(() => {
         if (newRoomUser != undefined) {
             if (newRoomUser.user === actualUser[1]){
-                getChatList()
+                // getChatList()
             }
         }
     }, [newRoomUser]);
@@ -403,6 +403,24 @@ export default function home(){
             socket.off("message")
         }
     }, [socket, isConnected]);
+
+    const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
+      
+    useEffect(() => {
+        if (seconds > 0) {
+        const timer = setInterval(() => {
+            setSeconds(prevSeconds => prevSeconds - 1);
+        }, 1000);
+      
+        return () => clearInterval(timer); // Limpiar el intervalo al desmontar
+          }
+        }, [seconds]);
+      
+    const formatTime = (sec) => {
+        const minutes = Math.floor(sec / 60);
+        const remainingSeconds = sec % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+    };
 
     return(
         <>
@@ -445,28 +463,13 @@ export default function home(){
                 actualUser != "" && newChat == false &&
                 <>
                     <div className={styles.body}>
-                        <div className={
-                            clsx({
-                                [styles.sidebar]: theme == "light",
-                                [styles.sidebar_dark]: theme == "dark"
-                            })
-                        }>
-                            <h2 className={styles.whatsapp}>WhatsApp</h2>
-                            <h3 className={styles.chattitle}>Chats</h3>
-                            <NewChat onClick={handleNewChat} variant={theme}/>
-                            <div id="chatList">
-
-                            </div>
-                            <button onClick={closeSession} className={
-                                clsx({
-                                    [styles.closeSession]: theme == "light",
-                                    [styles.closeSession_dark]: theme == "dark"
-                                })
-                            }>Cerrar Sesión</button>
-                        </div>
                         <div className={styles.topbar}>
                             <p className={styles.pheader}>{contactName}</p>
                             <Button_theme onClick={modoOscuro}/>
+                            <div>
+                                <h1>Contador: {formatTime(seconds)}</h1>
+                                {seconds === 0 && <h2>¡Tiempo terminado!</h2>}
+                            </div>
                         </div>
                         <div className={styles.chat} id="chat">
                             {chats.map(chat => (
@@ -485,13 +488,11 @@ export default function home(){
                             ))}
                         </div>
                         <div className={styles.bottombar}>
-                            <Input id={"mensaje"} variant={theme} onChange={handleMessageChange} value={message}/>
-                            <Button onClick={insertMessages} variant={theme}/>
+                            <h2>Promedio: {actualUser[1]}</h2>
                         </div>
                     </div>
                 </>
             }
-            
         </>
     )
 }

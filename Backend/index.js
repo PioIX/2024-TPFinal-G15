@@ -66,20 +66,20 @@ app.get('/', (req, res) => {
 });
 
 app.get('/getUsers', async function(req,res) {
-	const result = await MySQL.realizarQuery(`SELECT * FROM UsersWA;`);
+	const result = await MySQL.realizarQuery(`SELECT * FROM Users;`);
 	res.send(result);
 });
 
 app.post('/getUser', async function(req,res) {
 	const username = req.body.username
-	const result = await MySQL.realizarQuery(`SELECT * FROM UsersWA WHERE username = "${username}";`);
+	const result = await MySQL.realizarQuery(`SELECT * FROM Users WHERE username = "${username}";`);
 	res.send(result);
 });
 
 app.post('/login', async function(req,res) {
 	const username = req.body.username
 	const password = req.body.password
-	const result = await MySQL.realizarQuery(`SELECT * FROM UsersWA WHERE username = "${username}" AND password = "${password}";`);
+	const result = await MySQL.realizarQuery(`SELECT * FROM Users WHERE username = "${username}" AND password = "${password}";`);
 	if (result === undefined || result.length === 0){
 		res.send({message: "Usuario o contraseña incorrecta"})
 	} else {
@@ -91,9 +91,9 @@ app.post('/login', async function(req,res) {
 app.post('/register', async function(req, res) {
 	const username = req.body.username;
 	const password = req.body.password;
-	const result = await MySQL.realizarQuery(`INSERT INTO UsersWA (username, password)
+	const result = await MySQL.realizarQuery(`INSERT INTO Users (username, password)
 	VALUES ("${username}", "${password}")`);
-	const result2 = await MySQL.realizarQuery(`SELECT * FROM UsersWA WHERE username = "${username}";`)
+	const result2 = await MySQL.realizarQuery(`SELECT * FROM Users WHERE username = "${username}";`)
 	if (result2 === undefined || result2.length === 0){
 		res.send({message: 'Hubo un error al seleccionar el usuario'});
 	} else {
@@ -104,13 +104,13 @@ app.post('/register', async function(req, res) {
 
 app.post('/getChats', async function(req,res) {
 	const userId = req.body.userId
-	const result = await MySQL.realizarQuery(`SELECT Chats.chatId, userId, name FROM Chats INNER JOIN Chats_users ON Chats_users.chatId = Chats.chatId WHERE userId = ${userId};`);
+	const result = await MySQL.realizarQuery(`SELECT Chats.chatId, userid, name FROM Chats INNER JOIN Chats_users ON Chats_users.chatId = Chats.chatId WHERE userid = ${userId};`);
 	res.send(result);
 });
 
 app.post('/getChatsUsers', async function(req,res) {
 	const userId = req.body.userId;
-	const result = await MySQL.realizarQuery(`SELECT Chats_users.chatId, name FROM Chats_users INNER JOIN Chats ON Chats_users.chatId = Chats.chatId WHERE userId = ${userId};`);
+	const result = await MySQL.realizarQuery(`SELECT Chats_users.chatId, name FROM Chats_users INNER JOIN Chats ON Chats_users.chatId = Chats.chatId WHERE userid = ${userId};`);
 	res.send({chats: result});
 });
 
@@ -122,7 +122,7 @@ app.get('/getMessages', async function(req,res) {
 
 app.post('/getMessagesChat', async function(req,res) {
 	const chatId = req.body.chatId;
-	const result = await MySQL.realizarQuery(`SELECT Messages.userId, chatId, message, username FROM Messages INNER JOIN UsersWA ON UsersWA.userId = Messages.userId WHERE chatId = ${chatId};`);
+	const result = await MySQL.realizarQuery(`SELECT Messages.userid, chatId, message, username FROM Messages INNER JOIN Users ON Users.userid = Messages.userid WHERE chatId = ${chatId};`);
 	res.send({messages: result});
 });
 
@@ -131,7 +131,7 @@ app.post('/insertChat', async function(req, res) {
 	const userId = req.body.userId
 	const result = await MySQL.realizarQuery(`INSERT INTO Chats (name)
 	VALUES ("${name}")`);
-	const result2 = await MySQL.realizarQuery(`SELECT Chats.chatId FROM Chats INNER JOIN Chats_users WHERE name = "${name}" AND userId = ${userId};`)
+	const result2 = await MySQL.realizarQuery(`SELECT Chats.chatId FROM Chats INNER JOIN Chats_users WHERE name = "${name}" AND userid = ${userId};`)
 	res.send({message: 'Chat agregado a la tabla', result: result2});
 });
 
@@ -140,9 +140,9 @@ app.post('/insertChats_users', async function(req, res) {
 	const userId1 = req.body.userId1;
 	const userId2 = req.body.userId2
 	try {
-		const result = await MySQL.realizarQuery(`INSERT INTO Chats_users (chatId, userId)
+		const result = await MySQL.realizarQuery(`INSERT INTO Chats_users (chatId, userid)
 		VALUES (${chatId}, ${userId1})`);
-		const result2 = await MySQL.realizarQuery(`INSERT INTO Chats_users (chatId, userId)
+		const result2 = await MySQL.realizarQuery(`INSERT INTO Chats_users (chatId, userid)
 		VALUES (${chatId}, ${userId2})`);
 		res.send({message: 'Chat agregado a la tabla', result: result});
 	  } catch (e) {
@@ -155,7 +155,7 @@ app.post('/insertMessage', async function(req, res) {
 	const chatId = req.body.chatId;
 	const message = req.body.message;
 	try {
-		const result = await MySQL.realizarQuery(`INSERT INTO Messages (userId, message, chatId)
+		const result = await MySQL.realizarQuery(`INSERT INTO Messages (userid, message, chatId)
 		VALUES ("${userId}", "${message}", ${chatId})`);
 		res.send({message: 'Mensasje agregado a la tabla', result: result});
 	  } catch (e) {
