@@ -18,7 +18,7 @@ export default function home(){
     const [actualUser, setActualUser] = useState([]);
     const [newChatUser, setNewChatUser] = useState("");
     const [newChatName, setNewChatName] = useState("");
-    const [newChat, setNewChat] = useState(false);
+    const [selectProfesor, setSelectProfesor] = useState(false);
 
 
     let user = ""
@@ -101,6 +101,7 @@ export default function home(){
                 setUsername("")
                 setPassword("")
                 handleContador()
+                setSelectProfesor(true)
             } else {
                 alert(result.message)
             }
@@ -280,22 +281,10 @@ export default function home(){
                     socket.emit("newRoom", {username: newChatUser})
                 }
             }
-            setNewChat(false)
             // getChatList()
         } else {
             alert("Completar la información")
         }
-    }
-
-    function handleNewChat() {
-        setNewChatName("")
-        setNewChatUser("")
-        setNewChat(true)
-    }
-
-    function cancelNewChat(){
-        setNewChatUser("")
-        setNewChat(false)
     }
 
     //MARK: Socket
@@ -331,15 +320,28 @@ export default function home(){
     const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{name: "Marche", description: "Bondadoso"}, {name: "Facón", description: "Experto en desaprobar alumnos"}, {name: "Rivi", description: "Paciente"}])
-    const [profesor, setProfesor] = useState(0)
+    const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
 
     function handleContador(){
         setContador(true)
     }
 
+    // Solucionar tema de apretar flechas y que se cambien los profesores
+    // addEventListener("rightarrow", (event) => {handleRight});
+
     function handleRight(){
-        if (profesores.length - 1 != profesor) {
-            setProfesor(profesor+1)
+        if (profesores.length - 1 != profesorSeleccionado) {
+            setProfesorSeleccionado(profesorSeleccionado + 1)
+        } else {
+            setProfesorSeleccionado(0)
+        }
+    }
+
+    function handleLeft(){
+        if (profesorSeleccionado > 0) {
+            setProfesorSeleccionado(profesorSeleccionado - 1)
+        } else {
+            setProfesorSeleccionado(profesores.length - 1)
         }
     }
       
@@ -380,21 +382,21 @@ export default function home(){
                 </>
             }
             {
-                newChat === true &&
+                selectProfesor === true &&
                 <>
-                    <div className={styles.bodyNewChat}>
-                        <div className={styles.newChat}>
-                            <Profesor name={profesores[profesor].name} description={profesores[profesor].description}/>
-                            <div>
-                                <button onClick={handleRight}>siguiente</button>
-                                <button onClick={handleLeft}>anterior</button>
+                    <div className={styles.bodySelectProfesor}>
+                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"}/></button>
+                        <div className={styles.selectProfesor}>
+                            <Profesor name={profesores[profesorSeleccionado].name} description={profesores[profesorSeleccionado].description}/>
+                            <div className={styles.selectProfesorDiv}>
                             </div>
                         </div>
+                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"}/></button>
                     </div>
                 </>
             }
             {
-                actualUser != "" && newChat == false &&
+                actualUser != "" && selectProfesor == false &&
                 <>
                     <div className={styles.body}>
                         <div className={styles.topbar}>
