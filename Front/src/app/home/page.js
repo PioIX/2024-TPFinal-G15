@@ -319,7 +319,7 @@ export default function home(){
 
     const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
-    const [profesores, setProfesores] = useState([{name: "Marche", description: "Bondadoso"}, {name: "Facón", description: "Experto en desaprobar alumnos"}, {name: "Rivi", description: "Paciente"}])
+    const [profesores, setProfesores] = useState([{name: "Marche", description: "Bondadoso"}, {name: "Facón", description: "Experto en desaprobar alumnos"}, {name: "Rivi", description: "Paciente"}, {name: "Brenda", description: "Experta en Ubuntu"}, {name: "Santi", description: "Pecho frio"}, {name: "Feli", description: "The BOSS"}, {name: "Rossi", description: "Mucho muy rápido"}])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
 
     function handleContador(){
@@ -328,7 +328,23 @@ export default function home(){
 
     // Solucionar tema de apretar flechas y que se cambien los profesores
     // addEventListener("rightarrow", (event) => {handleRight});
-
+    const handleKeyDown = (event) => {
+        // Cambia 'Enter' por la tecla que desees (puedes usar el código de la tecla o el nombre)
+        if (event.key === 'Enter') {
+          handleRight();
+        }
+      };
+    
+      useEffect(() => {
+        // Añadir el evento al montar el componente
+        window.addEventListener('keydown', handleKeyDown);
+    
+        // Limpiar el evento al desmontar
+        return () => {
+          window.removeEventListener('keydown', handleKeyDown);
+        };
+      }, []);
+    
     function handleRight(){
         if (profesores.length - 1 != profesorSeleccionado) {
             setProfesorSeleccionado(profesorSeleccionado + 1)
