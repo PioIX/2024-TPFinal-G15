@@ -52,7 +52,7 @@
   display: flex;
   height: 100%;
   width: 100vw;
-  background-image: url("../../../public/sale.jpg");
+  background-image: url("../../../public/sale2.jpg");
   background-size: 100vw 100vh;
 }
 
@@ -246,4 +246,12 @@
   margin: 20px auto 0 auto;
   justify-content: space-between;
   width: 24vw;
+}
+
+.profesor {
+  width: 90px;
+  height: 90px;
+  position: absolute;
+  left: 10px;
+  top: 5px;
 }

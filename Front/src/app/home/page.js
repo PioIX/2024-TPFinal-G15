@@ -236,7 +236,7 @@ export default function home(){
     };
     
     useEffect(() => {
-        if (actualProfesor != undefined && actualProfesor.length != 0){
+        if (selectProfesor === true){
             // Añadir el evento al montar el componente
             window.addEventListener('keydown', handleKeyDown);
         }
@@ -246,7 +246,7 @@ export default function home(){
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [profesorSeleccionado]);
+    }, [profesorSeleccionado, selectProfesor]);
 
     // addEventListener('keypress', (e) => {
     //     if (e.key === 'Enter') {
@@ -341,6 +341,7 @@ export default function home(){
                                 {seconds === 0 && <h2>¡Tiempo terminado!</h2>}
                             </div>
                         </div>
+                        <img src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt= {`Foto de ${actualProfesor.name}`}/>
                         <div className={styles.chat} id="chat">
                             {/* {chats.map(chat => (
                                 chat.messages.length > 0 && chat.chatId === actualChat ? (
