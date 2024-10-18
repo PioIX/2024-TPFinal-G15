@@ -221,11 +221,13 @@
 
 .selectProfesor button {
   width: 10vw;
+  height: 30px;
   font-size: 16px;
   border: 0;
   border-radius: 8px;
   background-color: rgb(219, 219, 219);
   padding: 5px;
+  margin: auto;
 }
 
 .selectProfesor button:hover {

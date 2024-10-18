@@ -16,14 +16,10 @@ export default function home(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [actualUser, setActualUser] = useState([]);
-    const [newChatUser, setNewChatUser] = useState("");
-    const [newChatName, setNewChatName] = useState("");
     const [selectProfesor, setSelectProfesor] = useState(false);
 
 
     let user = ""
-
-    const [chats, setChats] = useState([]);
 
     async function register () {
         if (username != undefined && username != "" && password != undefined && password != "") {
@@ -65,7 +61,6 @@ export default function home(){
                     alert("Registro realizado correctamente")
                     setUsername("")
                     setPassword("")
-                    handleContador()
                 }
             } else {
                 console.log(result)
@@ -100,7 +95,6 @@ export default function home(){
                 alert("Inicio de sesión correcto")
                 setUsername("")
                 setPassword("")
-                handleContador()
                 setSelectProfesor(true)
             } else {
                 alert(result.message)
@@ -178,39 +172,6 @@ export default function home(){
         }
     },[newMessage])
 
-    async function insertMessages(){
-        if (message != "" && message != undefined) {
-            const data = {
-                chatId: actualChat,
-                message: message.trim(),
-                userId: actualUser[0]
-            }
-    
-            const response = await fetch('http://127.0.0.1:4000/insertMessage', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-    
-            if (!response.ok) throw new Error('Error al enviar el mensaje');
-    
-            const result = await response.json();
-    
-            console.log(result)
-    
-            sendMessage()
-        } else {
-            alert("No se puede enviar un mensaje vacío")
-        }
-    }
-
-    const handleMessageChange = (e) => {
-        setMessage(e.target.value);
-    };
-
     function modoOscuro() {
         var element = document.body;
         element.classList.toggle(styles.dark_mode);
@@ -218,72 +179,6 @@ export default function home(){
             setTheme("dark")
         } else {
             setTheme("light")
-        }
-    }
-
-    async function addChat() {
-        if (newChatUser != "" && newChatName != "" && newChatName != actualUser[1]) {
-            const data = {
-                username: newChatUser,
-            }
-    
-            const response = await fetch('http://localhost:4000/getUser', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-    
-            const result = await response.json();
-            console.log(result)
-            console.log(result[0].userId)
-            
-            if (result != undefined || result.length != 0){
-                const data3 = {
-                    name: newChatName,
-                    userId: actualUser[0]
-                }
-        
-                const response3 = await fetch('http://127.0.0.1:4000/insertChat', {
-                    method: 'POST',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data3),
-                });
-        
-                if (!response3.ok) throw new Error('Error al enviar el mensaje');
-                const result3 = await response3.json();
-        
-                if (result3) {
-                    console.log(result3)
-                    const data2 = {
-                        chatId: result3.result[0].chatId,
-                        userId1: actualUser[0],
-                        userId2: result[0].userId
-                    }
-            
-                    const response2 = await fetch('http://127.0.0.1:4000/insertChats_users', {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data2),
-                    });
-            
-                    if (!response2.ok) throw new Error('Error al enviar el mensaje');
-                    const result2 = await response2.json();
-                    console.log(newChatUser)
-                    socket.emit("newRoom", {username: newChatUser})
-                }
-            }
-            // getChatList()
-        } else {
-            alert("Completar la información")
         }
     }
 
@@ -321,6 +216,7 @@ export default function home(){
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{name: "Marche", description: "Bondadoso"}, {name: "Facón", description: "Experto en desaprobar alumnos"}, {name: "Rivi", description: "Paciente"}, {name: "Brenda", description: "Experta en Ubuntu"}, {name: "Santi", description: "Pecho frio"}, {name: "Feli", description: "The BOSS"}, {name: "Rossi", description: "Mucho muy rápido"}])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
+    const [actualProfesor, setActualProfesor] = useState() 
 
     function handleContador(){
         setContador(true)
@@ -328,22 +224,36 @@ export default function home(){
 
     // Solucionar tema de apretar flechas y que se cambien los profesores
     // addEventListener("rightarrow", (event) => {handleRight});
-    const handleKeyDown = (event) => {
-        // Cambia 'Enter' por la tecla que desees (puedes usar el código de la tecla o el nombre)
-        if (event.key === 'Enter') {
-          handleRight();
+    const handleKeyDown = (event) => { 
+        console.log(event.key); // Para depurar
+        if (event.key === 'ArrowRight') {
+            handleRight();
+        } else if (event.key === "ArrowLeft"){
+            handleLeft()
+        } else if (event.key === "Enter" && actualUser != ""){
+            changeSelectProfesor()
         }
-      };
+    };
     
-      useEffect(() => {
-        // Añadir el evento al montar el componente
-        window.addEventListener('keydown', handleKeyDown);
+    useEffect(() => {
+        if (actualProfesor != undefined && actualProfesor.length != 0){
+            // Añadir el evento al montar el componente
+            window.addEventListener('keydown', handleKeyDown);
+        }
+        
     
         // Limpiar el evento al desmontar
         return () => {
-          window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keydown', handleKeyDown);
         };
-      }, []);
+    }, [profesorSeleccionado]);
+
+    // addEventListener('keypress', (e) => {
+    //     if (e.key === 'Enter') {
+    //         e.preventDefault()
+    //         handleRight()
+    //     }
+    // });
     
     function handleRight(){
         if (profesores.length - 1 != profesorSeleccionado) {
@@ -359,6 +269,13 @@ export default function home(){
         } else {
             setProfesorSeleccionado(profesores.length - 1)
         }
+    }
+
+    function changeSelectProfesor(){
+        setActualProfesor(profesores[profesorSeleccionado])
+        handleContador()
+        setSelectProfesor(false)
+        setProfesorSeleccionado(0)
     }
       
     useEffect(() => {
@@ -405,6 +322,7 @@ export default function home(){
                         <div className={styles.selectProfesor}>
                             <Profesor name={profesores[profesorSeleccionado].name} description={profesores[profesorSeleccionado].description}/>
                             <div className={styles.selectProfesorDiv}>
+                                <button onClick={changeSelectProfesor}>Listo</button>
                             </div>
                         </div>
                         <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"}/></button>
@@ -424,7 +342,7 @@ export default function home(){
                             </div>
                         </div>
                         <div className={styles.chat} id="chat">
-                            {chats.map(chat => (
+                            {/* {chats.map(chat => (
                                 chat.messages.length > 0 && chat.chatId === actualChat ? (
                                     chat.messages.map((msg) => {
                                         if (msg.userId === actualUser[0]) {
@@ -437,7 +355,7 @@ export default function home(){
                                 ) : (
                                     <></>
                                 )
-                            ))}
+                            ))} */}
                         </div>
                         <div className={styles.bottombar}>
                             <h2>Promedio: {actualUser[1]}</h2>
