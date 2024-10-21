@@ -255,3 +255,59 @@
   left: 10px;
   top: 5px;
 }
+
+.selectPlayer {
+  display: block;
+  text-align: left;
+  margin: auto;
+  align-items: baseline;
+  background-color: rgb(33, 139, 23);
+  /* background-color: rgb(146, 28, 214); */
+  padding: 7vh 3vw 7vh 3vw;
+  border-radius: 25px;
+  -webkit-box-shadow: -2px 6px 60px 15px rgba(0,0,0,0.7);
+  -moz-box-shadow: -2px 6px 60px 15px rgba(0,0,0,0.7);
+  box-shadow: -2px 6px 60px 15px rgba(0,0,0,0.7);
+}
+
+.selectPlayer h2 {
+  font-size: 30px;
+  margin: 5px 0 5px 0;
+  text-align: center;
+}
+
+
+.selectPlayer button {
+  width: 10vw;
+  font-size: 16px;
+  border: 0;
+  border-radius: 8px;
+  background-color: rgb(219, 219, 219);
+  padding: 5px;
+}
+
+.selectPlayer button:hover {
+  background-color: black;
+  background-color: rgb(110, 110, 110);
+  cursor: pointer;
+}
+
+.selectPlayer div {
+  display: flex;
+  margin: 20px auto 0 auto;
+  justify-content: space-between;
+  width: 24vw;
+}
+
+.bodySelectPlayer {
+  display: flex;
+  height: 100vh;
+}
+
+.alumno {
+  width: 90px;
+  height: 90px;
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+}

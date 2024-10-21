@@ -61,6 +61,7 @@ export default function home(){
                     alert("Registro realizado correctamente")
                     setUsername("")
                     setPassword("")
+                    setSelectPlayer(true)
                 }
             } else {
                 console.log(result)
@@ -95,7 +96,7 @@ export default function home(){
                 alert("Inicio de sesión correcto")
                 setUsername("")
                 setPassword("")
-                setSelectProfesor(true)
+                setSelectPlayer(true)
             } else {
                 alert(result.message)
             }
@@ -214,16 +215,20 @@ export default function home(){
 
     const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
-    const [profesores, setProfesores] = useState([{name: "Marche", description: "Bondadoso"}, {name: "Facón", description: "Experto en desaprobar alumnos"}, {name: "Rivi", description: "Paciente"}, {name: "Brenda", description: "Experta en Ubuntu"}, {name: "Santi", description: "Pecho frio"}, {name: "Feli", description: "The BOSS"}, {name: "Rossi", description: "Mucho muy rápido"}])
+    const [profesores, setProfesores] = useState([{name: "Marche", description: "Bondadoso"}, {name: "Facón", description: "Experto en desaprobar alumnos"}, {name: "Rivi", description: "Paciente"}, {name: "Brenda", description: "Experta en Ubuntu"}, {name: "Santi", description: "Pecho frio"}, {name: "Feli", description: "The BOSS"}, {name: "Belu", description: "Chusma"}, {name: "Damatto", description: "Ecologista"}, {name: "Ana", description: "Ama poner partes"}, {name: "Caro Bruno", description: "Gallina"}, {name: "Pablito", description: "Se hace el gorra"}, {name: "Chela", description: "Jardinera"}])
+    const [alumnos, setAlumnos] = useState([{name: "Maraval", description: "Pelado insoportable."}, {name: "Lujan", description: "Experta en quejas"}, {name: "Tomi", description: "Pollera"}, {name: "Cachete", description: "Traga"}, {name: "Mica", description: "Gimnasta"}, {name: "May", description: "Gei"}, {name: "Candela", description: "Ex comu"}, {name: "Lucas", description: "Judio"}, {name: "Juan", description: "Golpeado"}, {name: "Agus", description: "El primo"}, {name: "Tomi Beli", description: "Anti Pala"}])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
-    const [actualProfesor, setActualProfesor] = useState() 
+    const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(0)
+    const [actualProfesor, setActualProfesor] = useState()
+    const [actualStudent, setActualStudent] = useState()
+    const [selectPlayer, setSelectPlayer] = useState(false)
+    const [selectStudent, setSelectStudent] = useState(false)
+
 
     function handleContador(){
         setContador(true)
     }
 
-    // Solucionar tema de apretar flechas y que se cambien los profesores
-    // addEventListener("rightarrow", (event) => {handleRight});
     const handleKeyDown = (event) => { 
         console.log(event.key); // Para depurar
         if (event.key === 'ArrowRight') {
@@ -231,12 +236,16 @@ export default function home(){
         } else if (event.key === "ArrowLeft"){
             handleLeft()
         } else if (event.key === "Enter" && actualUser != ""){
-            changeSelectProfesor()
+            if (selectProfesor === true){
+                changeSelectProfesor()
+            } else {
+                changeSelectStudent()
+            }
         }
     };
     
     useEffect(() => {
-        if (selectProfesor === true){
+        if (selectProfesor === true || selectStudent === true){
             // Añadir el evento al montar el componente
             window.addEventListener('keydown', handleKeyDown);
         }
@@ -246,28 +255,38 @@ export default function home(){
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [profesorSeleccionado, selectProfesor]);
+    }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado]);
 
-    // addEventListener('keypress', (e) => {
-    //     if (e.key === 'Enter') {
-    //         e.preventDefault()
-    //         handleRight()
-    //     }
-    // });
     
     function handleRight(){
-        if (profesores.length - 1 != profesorSeleccionado) {
-            setProfesorSeleccionado(profesorSeleccionado + 1)
+        if (selectProfesor == true) {
+            if (profesores.length - 1 != profesorSeleccionado) {
+                setProfesorSeleccionado(profesorSeleccionado + 1)
+            } else {
+                setProfesorSeleccionado(0)
+            }
         } else {
-            setProfesorSeleccionado(0)
+            if (alumnos.length - 1 != alumnoSeleccionado) {
+                setAlumnoSeleccionado(alumnoSeleccionado + 1)
+            } else {
+                setAlumnoSeleccionado(0)
+            }
         }
     }
 
     function handleLeft(){
-        if (profesorSeleccionado > 0) {
-            setProfesorSeleccionado(profesorSeleccionado - 1)
+        if (selectProfesor == true) {
+            if (profesorSeleccionado > 0) {
+                setProfesorSeleccionado(profesorSeleccionado - 1)
+            } else {
+                setProfesorSeleccionado(profesores.length - 1)
+            }
         } else {
-            setProfesorSeleccionado(profesores.length - 1)
+            if (alumnoSeleccionado > 0) {
+                setAlumnoSeleccionado(alumnoSeleccionado - 1)
+            } else {
+                setAlumnoSeleccionado(alumnos.length - 1)
+            }
         }
     }
 
@@ -276,6 +295,23 @@ export default function home(){
         handleContador()
         setSelectProfesor(false)
         setProfesorSeleccionado(0)
+    }
+
+    function changeSelectStudent(){
+        setActualStudent(alumnos[alumnoSeleccionado])
+        handleContador()
+        setSelectStudent(false)
+        setAlumnoSeleccionado(0)
+    }
+
+    function funSelectProfesor(){
+        setSelectPlayer(false)
+        setSelectProfesor(true)
+    }
+
+    function funSelectStudent(){
+        setSelectStudent(true)
+        setSelectPlayer(false)
     }
       
     useEffect(() => {
@@ -315,6 +351,20 @@ export default function home(){
                 </>
             }
             {
+                selectPlayer === true &&
+                <>
+                    <div className={styles.bodySelectPlayer}>
+                        <div className={styles.selectPlayer}>
+                            <h2>¿Como vas a jugar?</h2>
+                            <div>
+                                <button onClick={funSelectProfesor}>Profesor</button>
+                                <button onClick={funSelectStudent}>Alumno</button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            }
+            {
                 selectProfesor === true &&
                 <>
                     <div className={styles.bodySelectProfesor}>
@@ -330,7 +380,22 @@ export default function home(){
                 </>
             }
             {
-                actualUser != "" && selectProfesor == false &&
+                selectStudent === true &&
+                <>
+                    <div className={styles.bodySelectProfesor}>
+                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"}/></button>
+                        <div className={styles.selectProfesor}>
+                            <Profesor name={alumnos[alumnoSeleccionado].name} description={alumnos[alumnoSeleccionado].description}/>
+                            <div className={styles.selectProfesorDiv}>
+                                <button onClick={changeSelectStudent}>Listo</button>
+                            </div>
+                        </div>
+                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"}/></button>
+                    </div>
+                </>
+            }
+            {
+                actualUser != "" && selectProfesor == false && selectStudent ==false && selectPlayer == false &&
                 <>
                     <div className={styles.body}>
                         <div className={styles.topbar}>
@@ -341,7 +406,14 @@ export default function home(){
                                 {seconds === 0 && <h2>¡Tiempo terminado!</h2>}
                             </div>
                         </div>
-                        <img src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt= {`Foto de ${actualProfesor.name}`}/>
+                        {
+                            actualProfesor != undefined &&
+                            <img src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt= {`Foto de ${actualProfesor.name}`}/>
+                        }
+                        {
+                            actualStudent != undefined &&
+                            <img src={`/${actualStudent.name}.gif`} className={styles.alumno} alt= {`Foto de ${actualStudent.name}`}/>
+                        }
                         <div className={styles.chat} id="chat">
                             {/* {chats.map(chat => (
                                 chat.messages.length > 0 && chat.chatId === actualChat ? (
