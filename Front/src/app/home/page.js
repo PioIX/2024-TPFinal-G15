@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import styles from "./page.module.css";
 
-export default function home(){
+export default function home() {
     const [theme, setTheme] = useState("light");
     const [contactName, setContactName] = useState("Nombre Usuario");
     const [actualChat, setActualChat] = useState(null);
@@ -21,12 +21,12 @@ export default function home(){
 
     let user = ""
 
-    async function register () {
+    async function register() {
         if (username != undefined && username != "" && password != undefined && password != "") {
             const data = {
                 username: username,
             }
-    
+
             const response = await fetch('http://localhost:4000/getUser', {
                 method: 'POST',
                 headers: {
@@ -35,15 +35,15 @@ export default function home(){
                 },
                 body: JSON.stringify(data),
             });
-    
+
             const result = await response.json();
-    
-            if (result === undefined || result.length === 0){
+
+            if (result === undefined || result.length === 0) {
                 const data1 = {
                     username: username,
                     password: password
                 }
-                
+
                 const response1 = await fetch('http://localhost:4000/register', {
                     method: 'POST',
                     headers: {
@@ -52,11 +52,11 @@ export default function home(){
                     },
                     body: JSON.stringify(data1),
                 });
-                
+
                 const result1 = await response1.json();
-                
-                
-                if (result1 != undefined || result1.length != 0){
+
+
+                if (result1 != undefined || result1.length != 0) {
                     setActualUser([result1.user[0].userId, result1.user[0].username])
                     alert("Registro realizado correctamente")
                     setUsername("")
@@ -71,14 +71,14 @@ export default function home(){
             alert("Complete la información")
         }
     }
-    
+
     async function login() {
         if (username != "" && password != "") {
             const data = {
                 username: username,
                 password: password
             }
-            
+
             const response = await fetch('http://localhost:4000/login', {
                 method: 'POST',
                 headers: {
@@ -87,11 +87,11 @@ export default function home(){
                 },
                 body: JSON.stringify(data),
             });
-            
+
             if (!response.ok) throw new Error('Error en la respuesta de la red');
             const result = await response.json();
 
-            if (result.user){
+            if (result.user) {
                 setActualUser([result.user[0].userId, result.user[0].username])
                 alert("Inicio de sesión correcto")
                 setUsername("")
@@ -116,23 +116,23 @@ export default function home(){
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     };
-    
+
     function selectChat(chat) {
-        socket.emit("leaveRoom", {room:actualChat})
+        socket.emit("leaveRoom", { room: actualChat })
         setContactName(chat.name);
         setActualChat(chat.chatId)
         // getMessages(chat)
         // getChatList()
         console.log(chats)
-        socket.emit("joinRoom", {room:chat.chatId})
+        socket.emit("joinRoom", { room: chat.chatId })
     }
-    
+
     useEffect(() => {
         // getChatList();
     }, [actualUser]);
-    
+
     const [newMessage, setNewMessage] = useState()
-    
+
     const sendMessage = () => {
         if (message.trim()) {
             const newMessage = {
@@ -142,15 +142,15 @@ export default function home(){
                 username: actualUser[1]
             };
 
-            setChats(prevChats => 
-                prevChats.map(chat => 
-                    chat.chatId === actualChat 
+            setChats(prevChats =>
+                prevChats.map(chat =>
+                    chat.chatId === actualChat
                         ? { ...chat, messages: [...chat.messages, newMessage] }
                         : chat
                 )
             );
 
-            socket.emit("sendMessage", {message: newMessage})
+            socket.emit("sendMessage", { message: newMessage })
 
             setMessage("");
         }
@@ -158,25 +158,25 @@ export default function home(){
 
     useEffect(() => {
         if (actualUser[0] != undefined) {
-            if (newMessage.message.message.userId != actualUser[0]){
+            if (newMessage.message.message.userId != actualUser[0]) {
                 console.log(newMessage)
                 console.log(actualUser[0])
-    
-                setChats(prevChats => 
-                    prevChats.map(chat => 
-                        chat.chatId === actualChat 
+
+                setChats(prevChats =>
+                    prevChats.map(chat =>
+                        chat.chatId === actualChat
                             ? { ...chat, messages: [...chat.messages, newMessage.message.message] }
                             : chat
                     )
                 );
             }
         }
-    },[newMessage])
+    }, [newMessage])
 
     function modoOscuro() {
         var element = document.body;
         element.classList.toggle(styles.dark_mode);
-        if (theme == "light"){
+        if (theme == "light") {
             setTheme("dark")
         } else {
             setTheme("light")
@@ -185,38 +185,38 @@ export default function home(){
 
     //MARK: Socket
     const { socket, isConnected } = useSocket();
-    
+
     useEffect(() => {
-        if(!socket) return;
-        
+        if (!socket) return;
+
         socket.on("pingAll", (data) => {
             console.log("Me llego el evento pingAll", data)
         });
-        
+
         socket.on("newRoom", (data) => {
             setNewRoomUser(data)
-            if (data.user === actualUser[1]){
+            if (data.user === actualUser[1]) {
                 console.log("New Room Created", data)
                 console.log("New Room Created, User: ", data)
             }
         });
-        
+
         socket.on("newMessage", (data) => {
-            if (data.message.message.userId != actualUser[0]){
+            if (data.message.message.userId != actualUser[0]) {
                 console.log("Mensaje de la sala: ", data)
                 setNewMessage(data)
             }
         })
 
-        return() => {
+        return () => {
             socket.off("message")
         }
     }, [socket, isConnected]);
 
     const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
-    const [profesores, setProfesores] = useState([{name: "Marche", description: "Bondadoso"}, {name: "Facón", description: "Experto en desaprobar alumnos"}, {name: "Rivi", description: "Paciente"}, {name: "Brenda", description: "Experta en Ubuntu"}, {name: "Santi", description: "Pecho frio"}, {name: "Feli", description: "The BOSS"}, {name: "Belu", description: "Chusma"}, {name: "Damatto", description: "Ecologista"}, {name: "Ana", description: "Ama poner partes"}, {name: "Caro Bruno", description: "Gallina"}, {name: "Pablito", description: "Se hace el gorra"}, {name: "Chela", description: "Jardinera"}])
-    const [alumnos, setAlumnos] = useState([{name: "Maraval", description: "Pelado insoportable."}, {name: "Lujan", description: "Experta en quejas"}, {name: "Tomi", description: "Pollera"}, {name: "Cachete", description: "Traga"}, {name: "Mica", description: "Gimnasta"}, {name: "May", description: "Gei"}, {name: "Candela", description: "Ex comu"}, {name: "Lucas", description: "Judio"}, {name: "Juan", description: "Golpeado"}, {name: "Agus", description: "El primo"}, {name: "Tomi Beli", description: "Anti Pala"}])
+    const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }])
+    const [alumnos, setAlumnos] = useState([{ name: "Maraval", description: "Pelado insoportable." }, { name: "Lujan", description: "Experta en quejas" }, { name: "Tomi", description: "Pollera" }, { name: "Cachete", description: "Traga" }, { name: "Mica", description: "Gimnasta" }, { name: "May", description: "Gei" }, { name: "Candela", description: "Ex comu" }, { name: "Lucas", description: "Judio" }, { name: "Juan", description: "Golpeado" }, { name: "Agus", description: "El primo" }, { name: "Tomi Beli", description: "Anti Pala" }])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
     const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(0)
     const [actualProfesor, setActualProfesor] = useState()
@@ -224,41 +224,74 @@ export default function home(){
     const [selectPlayer, setSelectPlayer] = useState(false)
     const [selectStudent, setSelectStudent] = useState(false)
 
+    const [xPositionProfesor, setXProfesor] = useState(10);
+    const [xPositionStudent, setXStudent] = useState(10);
+    const [yPositionProfesor, setYProfesor] = useState(5);
+    const [yPositionStudent, setYStudent] = useState(5);
 
-    function handleContador(){
+    function handleContador() {
         setContador(true)
     }
 
-    const handleKeyDown = (event) => { 
+    const handleKeyDown = (event) => {
         console.log(event.key); // Para depurar
         if (event.key === 'ArrowRight') {
             handleRight();
-        } else if (event.key === "ArrowLeft"){
+        } else if (event.key === "ArrowLeft") {
             handleLeft()
-        } else if (event.key === "Enter" && actualUser != ""){
-            if (selectProfesor === true){
+        } else if (event.key === "Enter" && actualUser != "") {
+            if (selectProfesor === true) {
                 changeSelectProfesor()
             } else {
                 changeSelectStudent()
             }
         }
     };
-    
-    useEffect(() => {
-        if (selectProfesor === true || selectStudent === true){
-            // Añadir el evento al montar el componente
-            window.addEventListener('keydown', handleKeyDown);
-        }
         
-    
+    const handleMovement = (event) => {
+        console.log("ENTRE AL EVENTO", event.key); // Para depurar
+        if (event.key === 'W' || event.key === "w") {
+
+            if (actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false) {
+                console.log("toque W", yPositionProfesor)
+                if (yPositionProfesor - 1 > 0) {
+                    console.log("HOLI");
+                    setYProfesor(yPositionProfesor + 10)
+                }
+            }
+        } else if (event.key === "A" || event.key === "a") {
+            if (xPositionProfesor - 1 > 0) {
+                setXProfesor(xPositionProfesor - 1)
+            }
+        }
+    };
+
+
+    useEffect(() => {
+        // Añadir el evento al montar el componente
+        window.addEventListener('keydown', handleMovement);
+
         // Limpiar el evento al desmontar
         return () => {
-            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keydown', handleMovement);
         };
-    }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado]);
+    }, [yPositionProfesor]);
 
-    
-    function handleRight(){
+    /*  useEffect(() => {
+         if (selectProfesor === true || selectStudent === true) {
+             // Añadir el evento al montar el componente
+             window.addEventListener('keydown', handleKeyDown);
+         }
+ 
+ 
+         // Limpiar el evento al desmontar
+         return () => {
+             window.removeEventListener('keydown', handleKeyDown);
+         };
+     }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado]);
+  */
+
+    function handleRight() {
         if (selectProfesor == true) {
             if (profesores.length - 1 != profesorSeleccionado) {
                 setProfesorSeleccionado(profesorSeleccionado + 1)
@@ -274,7 +307,7 @@ export default function home(){
         }
     }
 
-    function handleLeft(){
+    function handleLeft() {
         if (selectProfesor == true) {
             if (profesorSeleccionado > 0) {
                 setProfesorSeleccionado(profesorSeleccionado - 1)
@@ -290,47 +323,47 @@ export default function home(){
         }
     }
 
-    function changeSelectProfesor(){
+    function changeSelectProfesor() {
         setActualProfesor(profesores[profesorSeleccionado])
         handleContador()
         setSelectProfesor(false)
         setProfesorSeleccionado(0)
     }
 
-    function changeSelectStudent(){
+    function changeSelectStudent() {
         setActualStudent(alumnos[alumnoSeleccionado])
         handleContador()
         setSelectStudent(false)
         setAlumnoSeleccionado(0)
     }
 
-    function funSelectProfesor(){
+    function funSelectProfesor() {
         setSelectPlayer(false)
         setSelectProfesor(true)
     }
 
-    function funSelectStudent(){
-        setSelectStudent(true)
+    function funSelectStudent() {
         setSelectPlayer(false)
+        setSelectStudent(true)
     }
-      
+
     useEffect(() => {
         if (seconds > 0 && contador === true) {
-        const timer = setInterval(() => {
-            setSeconds(prevSeconds => prevSeconds - 1);
-        }, 1000);
-      
-        return () => clearInterval(timer); // Limpiar el intervalo al desmontar
-          }
-        }, [seconds, contador]);
-      
+            const timer = setInterval(() => {
+                setSeconds(prevSeconds => prevSeconds - 1);
+            }, 1000);
+
+            return () => clearInterval(timer); // Limpiar el intervalo al desmontar
+        }
+    }, [seconds, contador]);
+
     const formatTime = (sec) => {
         const minutes = Math.floor(sec / 60);
         const remainingSeconds = sec % 60;
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
-    return(
+    return (
         <>
             {
                 actualUser == "" &&
@@ -339,9 +372,9 @@ export default function home(){
                         <div className={styles.login}>
                             <h2>Login</h2>
                             <h3>User</h3>
-                            <InputLogin type={"text"} placeholder={"Ingrese su usuario"} onChange={handleUsernameChange} value={username}/>
+                            <InputLogin type={"text"} placeholder={"Ingrese su usuario"} onChange={handleUsernameChange} value={username} />
                             <h3>Password</h3>
-                            <InputLogin type={"password"} placeholder={"Ingrese su contraseña"} onChange={handlePasswordChange} value={password}/>
+                            <InputLogin type={"password"} placeholder={"Ingrese su contraseña"} onChange={handlePasswordChange} value={password} />
                             <div>
                                 <button onClick={login}>Login</button>
                                 <button onClick={register}>Registrarse</button>
@@ -368,14 +401,14 @@ export default function home(){
                 selectProfesor === true &&
                 <>
                     <div className={styles.bodySelectProfesor}>
-                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"}/></button>
+                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
-                            <Profesor name={profesores[profesorSeleccionado].name} description={profesores[profesorSeleccionado].description}/>
+                            <Profesor name={profesores[profesorSeleccionado].name} description={profesores[profesorSeleccionado].description} />
                             <div className={styles.selectProfesorDiv}>
                                 <button onClick={changeSelectProfesor}>Listo</button>
                             </div>
                         </div>
-                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"}/></button>
+                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                     </div>
                 </>
             }
@@ -383,24 +416,24 @@ export default function home(){
                 selectStudent === true &&
                 <>
                     <div className={styles.bodySelectProfesor}>
-                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"}/></button>
+                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
-                            <Profesor name={alumnos[alumnoSeleccionado].name} description={alumnos[alumnoSeleccionado].description}/>
+                            <Profesor name={alumnos[alumnoSeleccionado].name} description={alumnos[alumnoSeleccionado].description} />
                             <div className={styles.selectProfesorDiv}>
                                 <button onClick={changeSelectStudent}>Listo</button>
                             </div>
                         </div>
-                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"}/></button>
+                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                     </div>
                 </>
             }
             {
-                actualUser != "" && selectProfesor == false && selectStudent ==false && selectPlayer == false &&
+                actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false &&
                 <>
                     <div className={styles.body}>
                         <div className={styles.topbar}>
                             <p className={styles.pheader}>{contactName}</p>
-                            <Button_theme onClick={modoOscuro}/>
+                            <Button_theme onClick={modoOscuro} />
                             <div>
                                 <h1>Contador: {formatTime(seconds)}</h1>
                                 {seconds === 0 && <h2>¡Tiempo terminado!</h2>}
@@ -408,11 +441,11 @@ export default function home(){
                         </div>
                         {
                             actualProfesor != undefined &&
-                            <img src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt= {`Foto de ${actualProfesor.name}`}/>
+                            <img style={{ left: `${xPositionProfesor}px`, top: `${yPositionProfesor}px`, backgroundColor: "#f00000" }} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
                         }
                         {
                             actualStudent != undefined &&
-                            <img src={`/${actualStudent.name}.gif`} className={styles.alumno} alt= {`Foto de ${actualStudent.name}`}/>
+                            <img src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
                         }
                         <div className={styles.chat} id="chat">
                             {/* {chats.map(chat => (
