@@ -247,49 +247,129 @@ export default function home() {
             }
         }
     };
-        
-    const handleMovement = (event) => {
-        console.log("ENTRE AL EVENTO", event.key); // Para depurar
-        if (event.key === 'W' || event.key === "w") {
-
-            if (actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false) {
-                console.log("toque W", yPositionProfesor)
-                if (yPositionProfesor - 1 > 0) {
-                    console.log("HOLI");
-                    setYProfesor(yPositionProfesor + 10)
-                }
-            }
-        } else if (event.key === "A" || event.key === "a") {
-            if (xPositionProfesor - 1 > 0) {
-                setXProfesor(xPositionProfesor - 1)
-            }
-        }
-    };
-
 
     useEffect(() => {
-        // Añadir el evento al montar el componente
-        window.addEventListener('keydown', handleMovement);
+        if (selectProfesor === true || selectStudent === true) {
+            // Añadir el evento al montar el componente
+            window.addEventListener('keydown', handleKeyDown);
+        }
 
         // Limpiar el evento al desmontar
         return () => {
-            window.removeEventListener('keydown', handleMovement);
+            window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [yPositionProfesor]);
+    }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado]);
 
-    /*  useEffect(() => {
-         if (selectProfesor === true || selectStudent === true) {
-             // Añadir el evento al montar el componente
-             window.addEventListener('keydown', handleKeyDown);
-         }
- 
- 
-         // Limpiar el evento al desmontar
-         return () => {
-             window.removeEventListener('keydown', handleKeyDown);
-         };
-     }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado]);
-  */
+    const altoPantalla = window.innerHeight
+    const anchoPantalla = window.outerWidth
+
+    // const handleMovement = (event) => {
+    //     console.log("ENTRE AL EVENTO", event.key); // Para depurar
+    //     if (event.key === 'W' || event.key === "w") {
+    //             console.log("toque W", yPositionProfesor)
+    //             if (yPositionProfesor - 1 > 0) {
+    //                 setYProfesor(yPositionProfesor - 5)
+    //             }
+    //     }
+
+    //     if (event.key === "A" || event.key === "a") {
+    //         if (xPositionProfesor - 1 > 0) {
+    //             setXProfesor(xPositionProfesor - 5)
+    //         }
+    //     }
+
+    //     if (event.key === "S" || event.key === "s") {
+    //         if (yPositionProfesor + 1 < altoPantalla - 90) {
+    //             setYProfesor(yPositionProfesor + 5)
+    //         }
+    //     }
+
+    //     if (event.key === "D" || event.key === "d") {
+    //         if (xPositionProfesor + 1 < anchoPantalla - 90) {
+    //             setXProfesor(xPositionProfesor + 5)
+    //         }
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     // Añadir el evento al montar el componente
+    //     if (actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false){
+    //         window.addEventListener('keydown', handleMovement);
+    //     }
+
+    //     // Limpiar el evento al desmontar
+    //     return () => {
+    //         window.removeEventListener('keydown', handleMovement);
+    //     };
+    // }, [xPositionProfesor, yPositionProfesor, actualUser, selectProfesor, selectStudent, selectPlayer]);
+
+    const [keyState, setKeyState] = useState({});
+
+    const handleKeyDown1 = (event) => {
+        setKeyState((prev) => ({
+            ...prev,
+            [event.key]: true,
+        }));
+    };
+
+    const handleKeyUp = (event) => {
+        setKeyState((prev) => ({
+            ...prev,
+            [event.key]: false,
+        }));
+    };
+
+    const handleMovement = () => {
+        console.log("ENTRE AL EVENTO", event.key); // Para depurar
+        // Ejemplo de lógica para mover según las teclas
+        if (keyState['w'] && keyState['d']) {
+            console.log("toque W", yPositionProfesor)
+            if (yPositionProfesor - 1 > 0) {
+                setYProfesor(yPositionProfesor - 5)
+            }
+            if (xPositionProfesor + 1 < anchoPantalla - 90) {
+                setXProfesor(xPositionProfesor + 5)
+            }
+            // Mover hacia arriba y a la derecha
+        } else if (keyState['W'] || keyState['w']) {
+            if (yPositionProfesor - 1 > 0) {
+                setYProfesor(yPositionProfesor - 5)
+            }
+            // Mover hacia arriba y a la derecha
+        } else if (keyState['A'] || keyState['a']){
+            if (xPositionProfesor - 1 > 0) {
+                setXProfesor(xPositionProfesor - 5)
+            }
+        }  else if (keyState['S'] || keyState['s']) {
+            if (yPositionProfesor + 1 < altoPantalla - 90) {
+                setYProfesor(yPositionProfesor + 5)
+            }
+            // Mover hacia abajo
+        } else if (keyState['D'] || keyState['d']) {
+            if (xPositionProfesor + 1 < anchoPantalla - 90) {
+                setXProfesor(xPositionProfesor + 5)
+            }
+            // Mover hacia abajo
+        }
+        // Agrega más combinaciones según sea necesario
+    };
+
+    useEffect(() => {
+        if (actualUser !== "" && !selectProfesor && !selectStudent && !selectPlayer) {
+            window.addEventListener('keydown', handleKeyDown1);
+            window.addEventListener('keyup', handleKeyUp);
+        }
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown1);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
+    }, [actualUser, selectProfesor, selectStudent, selectPlayer]);
+
+    useEffect(() => {
+        handleMovement();
+        console.log(keyState)
+    }, [keyState]);
 
     function handleRight() {
         if (selectProfesor == true) {
@@ -441,7 +521,7 @@ export default function home() {
                         </div>
                         {
                             actualProfesor != undefined &&
-                            <img style={{ left: `${xPositionProfesor}px`, top: `${yPositionProfesor}px`, backgroundColor: "#f00000" }} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
+                            <img style={{ left: `${xPositionProfesor}px`, top: `${yPositionProfesor}px`, background: "#F00000"}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
                         }
                         {
                             actualStudent != undefined &&
