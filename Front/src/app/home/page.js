@@ -191,7 +191,9 @@ export default function home() {
             handleLeft()
         } else if (event.key === "Enter" && actualUser != "") {
             if (selectProfesor === true) {
-                changeSelectProfesor()
+                changeSelectProfesor()}
+            else if (selectMap === true) {
+                changeSetSelectMap()
             } else {
                 changeSelectStudent()
             }
@@ -360,16 +362,13 @@ export default function home() {
 
     function changeSelectProfesor() {
         setActualProfesor(profesores[profesorSeleccionado])
-        handleContador()
         setSelectProfesor(false)
         setProfesorSeleccionado(0)
         setSelectMap(true)
-        console.log("asassa")
     }
 
     function changeSelectStudent() {
         setActualStudent(alumnos[alumnoSeleccionado])
-        handleContador()
         setSelectStudent(false)
         setAlumnoSeleccionado(0)
         setSelectMap(true)
@@ -382,6 +381,7 @@ export default function home() {
 
     function changeSetSelectMap() {
         setSelectMap(false)
+        handleContador()
     }
 
     function funSelectStudent() {
@@ -488,7 +488,7 @@ export default function home() {
             {
                 actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false && selectMap == false &&
                 <>
-                    <div style={{backgroundImage: `/../../adelante.jpg`}} className={styles.body}>
+                    <div style={{backgroundImage: `url('/${mapas[mapaSeleccionado]}.jpg')`}} className={styles.body}>
                         <div className={styles.topbar}>
                             <p className={styles.pheader}>{contactName}</p>
                             <Button_theme onClick={modoOscuro} />
