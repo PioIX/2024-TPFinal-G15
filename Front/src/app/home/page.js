@@ -117,62 +117,6 @@ export default function home() {
         setPassword(e.target.value);
     };
 
-    function selectChat(chat) {
-        socket.emit("leaveRoom", { room: actualChat })
-        setContactName(chat.name);
-        setActualChat(chat.chatId)
-        // getMessages(chat)
-        // getChatList()
-        console.log(chats)
-        socket.emit("joinRoom", { room: chat.chatId })
-    }
-
-    useEffect(() => {
-        // getChatList();
-    }, [actualUser]);
-
-    const [newMessage, setNewMessage] = useState()
-
-    const sendMessage = () => {
-        if (message.trim()) {
-            const newMessage = {
-                chatId: actualChat,
-                message: message.trim(),
-                userId: actualUser[0],
-                username: actualUser[1]
-            };
-
-            setChats(prevChats =>
-                prevChats.map(chat =>
-                    chat.chatId === actualChat
-                        ? { ...chat, messages: [...chat.messages, newMessage] }
-                        : chat
-                )
-            );
-
-            socket.emit("sendMessage", { message: newMessage })
-
-            setMessage("");
-        }
-    };
-
-    useEffect(() => {
-        if (actualUser[0] != undefined) {
-            if (newMessage.message.message.userId != actualUser[0]) {
-                console.log(newMessage)
-                console.log(actualUser[0])
-
-                setChats(prevChats =>
-                    prevChats.map(chat =>
-                        chat.chatId === actualChat
-                            ? { ...chat, messages: [...chat.messages, newMessage.message.message] }
-                            : chat
-                    )
-                );
-            }
-        }
-    }, [newMessage])
-
     function modoOscuro() {
         var element = document.body;
         element.classList.toggle(styles.dark_mode);
@@ -223,6 +167,7 @@ export default function home() {
     const [actualStudent, setActualStudent] = useState()
     const [selectPlayer, setSelectPlayer] = useState(false)
     const [selectStudent, setSelectStudent] = useState(false)
+    const [userPlayer, setUserPlayer] = useState("")
 
     const [xPositionProfesor, setXProfesor] = useState(10);
     const [xPositionStudent, setXStudent] = useState(10);
@@ -308,7 +253,7 @@ export default function home() {
     const handleKeyDown1 = (event) => {
         setKeyState((prev) => ({
             ...prev,
-            [event.key]: true,
+            [event.key.toLowerCase]: true,
         }));
     };
 
@@ -319,33 +264,32 @@ export default function home() {
         }));
     };
 
-    const handleMovement = () => {
+    const handleMovement = (player) => {
         console.log("ENTRE AL EVENTO", event.key); // Para depurar
-        // Ejemplo de lógica para mover según las teclas
-        if (keyState['w'] && keyState['d']) {
-            console.log("toque W", yPositionProfesor)
-            if (yPositionProfesor - 1 > 0) {
-                setYProfesor(yPositionProfesor - 5)
-            }
-            if (xPositionProfesor + 1 < anchoPantalla - 90) {
-                setXProfesor(xPositionProfesor + 5)
-            }
-            // Mover hacia arriba y a la derecha
-        } else if (keyState['W'] || keyState['w']) {
-            if (yPositionProfesor - 1 > 0) {
-                setYProfesor(yPositionProfesor - 5)
+        if (keyState['W'] || keyState['w']) {
+            if (player == "profesor") {
+                if (yPositionProfesor - 5 > 0) {
+                    setYProfesor(yPositionProfesor - 5)
+                }
+            } else if (player == "student") {
+                if (yPositionStudent + 5 > 0) {
+                    setYProfesor(yPositionStudent + 5)
+                }
             }
             // Mover hacia arriba y a la derecha
-        } else if (keyState['A'] || keyState['a']){
+        }
+        if (keyState['A'] || keyState['a']){
             if (xPositionProfesor - 1 > 0) {
                 setXProfesor(xPositionProfesor - 5)
             }
-        }  else if (keyState['S'] || keyState['s']) {
+        }
+        if (keyState['S'] || keyState['s']) {
             if (yPositionProfesor + 1 < altoPantalla - 90) {
                 setYProfesor(yPositionProfesor + 5)
             }
             // Mover hacia abajo
-        } else if (keyState['D'] || keyState['d']) {
+        }
+        if (keyState['D'] || keyState['d']) {
             if (xPositionProfesor + 1 < anchoPantalla - 90) {
                 setXProfesor(xPositionProfesor + 5)
             }
@@ -355,19 +299,17 @@ export default function home() {
     };
 
     useEffect(() => {
-        if (actualUser !== "" && !selectProfesor && !selectStudent && !selectPlayer) {
-            window.addEventListener('keydown', handleKeyDown1);
-            window.addEventListener('keyup', handleKeyUp);
-        }
+        window.addEventListener('keydown', handleKeyDown1);
+        window.addEventListener('keyup', handleKeyUp);
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown1);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [actualUser, selectProfesor, selectStudent, selectPlayer]);
+    }, []);
 
     useEffect(() => {
-        handleMovement();
+        handleMovement(userPlayer);
         console.log(keyState)
     }, [keyState]);
 
