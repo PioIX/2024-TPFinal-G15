@@ -7,6 +7,7 @@ import Profesor from "@/components/Profesor";
 import { useEffect, useState } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import styles from "./page.module.css";
+import Mapa from "@/components/Mapa";
 
 export default function home() {
     const [theme, setTheme] = useState("light");
@@ -161,18 +162,22 @@ export default function home() {
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }])
     const [alumnos, setAlumnos] = useState([{ name: "Maraval", description: "Pelado insoportable." }, { name: "Lujan", description: "Experta en quejas" }, { name: "Tomi", description: "Pollera" }, { name: "Cachete", description: "Traga" }, { name: "Mica", description: "Gimnasta" }, { name: "May", description: "Gei" }, { name: "Candela", description: "Ex comu" }, { name: "Lucas", description: "Judio" }, { name: "Juan", description: "Golpeado" }, { name: "Agus", description: "El primo" }, { name: "Tomi Beli", description: "Anti Pala" }])
+    const [mapas, setMapas] =useState (["sale2", "sale1", "sale3"])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
     const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(0)
+    const [mapaSeleccionado, setMapaSeleccionado] = useState (0)
     const [actualProfesor, setActualProfesor] = useState()
     const [actualStudent, setActualStudent] = useState()
     const [selectPlayer, setSelectPlayer] = useState(false)
     const [selectStudent, setSelectStudent] = useState(false)
     const [userPlayer, setUserPlayer] = useState("")
+    const [selectMap, setSelectMap]= useState (false)
 
     const [xPositionProfesor, setXProfesor] = useState(10);
     const [xPositionStudent, setXStudent] = useState(10);
     const [yPositionProfesor, setYProfesor] = useState(5);
     const [yPositionStudent, setYStudent] = useState(5);
+
 
     function handleContador() {
         setContador(true)
@@ -320,7 +325,15 @@ export default function home() {
             } else {
                 setProfesorSeleccionado(0)
             }
-        } else {
+        }
+        else if (selectMap == true) {
+            if (mapas.length - 1 != mapaSeleccionado) {
+                setMapaSeleccionado(mapaSeleccionado + 1)
+            } else {
+                setMapaSeleccionado(0)
+            }
+        } 
+        else {
             if (alumnos.length - 1 != alumnoSeleccionado) {
                 setAlumnoSeleccionado(alumnoSeleccionado + 1)
             } else {
@@ -350,6 +363,8 @@ export default function home() {
         handleContador()
         setSelectProfesor(false)
         setProfesorSeleccionado(0)
+        setSelectMap(true)
+        console.log("asassa")
     }
 
     function changeSelectStudent() {
@@ -357,11 +372,16 @@ export default function home() {
         handleContador()
         setSelectStudent(false)
         setAlumnoSeleccionado(0)
+        setSelectMap(true)
     }
 
     function funSelectProfesor() {
         setSelectPlayer(false)
         setSelectProfesor(true)
+    }
+
+    function changeSetSelectMap() {
+        setSelectMap(false)
     }
 
     function funSelectStudent() {
@@ -450,9 +470,25 @@ export default function home() {
                 </>
             }
             {
-                actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false &&
+                selectMap === true &&
                 <>
-                    <div className={styles.body}>
+                <div className={styles.bodySelectProfesor}>
+                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
+                        <div className={styles.selectProfesor}>
+                            <Mapa name={mapas[mapaSeleccionado]} />
+                            <div className={styles.selectProfesorDiv}>
+                                <button onClick={changeSetSelectMap}>Listo</button>
+                            </div>
+                        </div>
+                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
+                    </div>
+                    
+                </>
+            }
+            {
+                actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false && selectMap == false &&
+                <>
+                    <div style={{backgroundImage: `/../../adelante.jpg`}} className={styles.body}>
                         <div className={styles.topbar}>
                             <p className={styles.pheader}>{contactName}</p>
                             <Button_theme onClick={modoOscuro} />
