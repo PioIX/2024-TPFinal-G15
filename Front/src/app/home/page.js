@@ -436,29 +436,16 @@ export default function home() {
     };
 
     useEffect(() => {
-        if(!socket)
-            return
-        
-        socket.on("pingAll", (data) => {
-            console.log(data);
-        })
-
-        
-    },[socket,isConnected])
-
-    useEffect(() => {
-        console.log("assasaa")
-        function pingAll() {
-            socket.emit("pingAll", {
+        if (socket){
+            console.log("ENTRE EN LA FUNCION PINGALL")
+            socket.emit("pingAll",{
                 xPositionProfesor: xPositionProfesor,
-                yPositionProfesor: yPositionProfesor
-                } //Se lo mando como objeto
+                yPositionProfesor: yPositionProfesor}
+                //Se lo mando como objeto
             );
-            console.log("assasaa")
         }
+    }, [xPositionProfesor, yPositionProfesor]);
 
-        pingAll();
-    },[xPositionProfesor,yPositionProfesor])
     return (
         <>
             {
@@ -545,7 +532,7 @@ export default function home() {
                     <div style={{backgroundImage: `url('/${mapas[mapaSeleccionado]}.jpg')`}} className={styles.body}>
                         <div className={styles.topbar}>
                             <p className={styles.pheader}>{contactName}</p>
-                            <Button_theme onClick={modoOscuro} />
+                            <Button_theme />
                             <div>
                                 <h1>Contador: {formatTime(seconds)}</h1>
                                 {seconds === 0 && <h2>¡Tiempo terminado!</h2>}
