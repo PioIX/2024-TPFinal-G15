@@ -162,7 +162,7 @@ export default function home() {
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }])
     const [alumnos, setAlumnos] = useState([{ name: "Maraval", description: "Pelado insoportable." }, { name: "Lujan", description: "Experta en quejas" }, { name: "Tomi", description: "Pollera" }, { name: "Cachete", description: "Traga" }, { name: "Mica", description: "Gimnasta" }, { name: "May", description: "Gei" }, { name: "Candela", description: "Ex comu" }, { name: "Lucas", description: "Judio" }, { name: "Juan", description: "Golpeado" }, { name: "Agus", description: "El primo" }, { name: "Tomi Beli", description: "Anti Pala" }])
-    const [mapas, setMapas] =useState (["sale2", "sale1", "sale3"])
+    const [mapas, setMapas] =useState (["sale1", "sale2", "sale3"])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
     const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(0)
     const [mapaSeleccionado, setMapaSeleccionado] = useState (0)
@@ -201,7 +201,7 @@ export default function home() {
     };
 
     useEffect(() => {
-        if (selectProfesor === true || selectStudent === true) {
+        if (selectProfesor === true || selectStudent === true || selectMap === true) {
             // Añadir el evento al montar el componente
             window.addEventListener('keydown', handleKeyDown);
         }
@@ -210,7 +210,7 @@ export default function home() {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado]);
+    }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado, selectMap, mapaSeleccionado]);
 
     const altoPantalla = window.innerHeight
     const anchoPantalla = window.outerWidth
@@ -260,7 +260,7 @@ export default function home() {
     const handleKeyDown1 = (event) => {
         setKeyState((prev) => ({
             ...prev,
-            [event.key.toLowerCase]: true,
+            [event.key]: true,
         }));
     };
 
@@ -279,26 +279,44 @@ export default function home() {
                     setYProfesor(yPositionProfesor - 5)
                 }
             } else if (player == "student") {
-                if (yPositionStudent + 5 > 0) {
-                    setYProfesor(yPositionStudent + 5)
+                if (yPositionStudent + 5 < altoPantalla - 90) {
+                    setYStudent(yPositionStudent + 5)
                 }
             }
             // Mover hacia arriba y a la derecha
         }
         if (keyState['A'] || keyState['a']){
-            if (xPositionProfesor - 1 > 0) {
-                setXProfesor(xPositionProfesor - 5)
+            if (player == "profesor") {
+                if (xPositionProfesor - 5 > 0) {
+                    setXProfesor(xPositionProfesor - 5)
+                }
+            } else if (player == "student") {
+                if (xPositionStudent + 5 < anchoPantalla - 90) {
+                    setXStudent(xPositionStudent + 5)
+                }
             }
         }
         if (keyState['S'] || keyState['s']) {
-            if (yPositionProfesor + 1 < altoPantalla - 90) {
-                setYProfesor(yPositionProfesor + 5)
+            if (player == "profesor") {
+                if (yPositionProfesor + 5 < altoPantalla - 90) {
+                    setYProfesor(yPositionProfesor + 5)
+                }
+            } else if (player == "student") {
+                if (yPositionStudent - 5 > 0) {
+                    setYStudent(yPositionStudent - 5)
+                }
             }
             // Mover hacia abajo
         }
         if (keyState['D'] || keyState['d']) {
-            if (xPositionProfesor + 1 < anchoPantalla - 90) {
-                setXProfesor(xPositionProfesor + 5)
+            if (player == "profesor") {
+                if (xPositionProfesor + 5 < anchoPantalla - 90) {
+                    setXProfesor(xPositionProfesor + 5)
+                }
+            } else if (player == "student") {
+                if (xPositionStudent - 5 > 0) {
+                    setXStudent(xPositionStudent - 5)
+                }
             }
             // Mover hacia abajo
         }
@@ -318,7 +336,7 @@ export default function home() {
     useEffect(() => {
         handleMovement(userPlayer);
         console.log(keyState)
-    }, [keyState]);
+    }, [keyState, userPlayer]);
 
     function handleRight() {
         if (selectProfesor == true) {
@@ -329,6 +347,7 @@ export default function home() {
             }
         }
         else if (selectMap == true) {
+            console.log(mapaSeleccionado)
             if (mapas.length - 1 != mapaSeleccionado) {
                 setMapaSeleccionado(mapaSeleccionado + 1)
             } else {
@@ -350,6 +369,14 @@ export default function home() {
                 setProfesorSeleccionado(profesorSeleccionado - 1)
             } else {
                 setProfesorSeleccionado(profesores.length - 1)
+            }
+        } 
+        else if (selectMap == true) {
+            console.log(mapaSeleccionado)
+            if (mapaSeleccionado > 0) {
+                setMapaSeleccionado(mapaSeleccionado - 1)
+            } else {
+                setMapaSeleccionado(mapas.length - 1)
             }
         } else {
             if (alumnoSeleccionado > 0) {
@@ -377,6 +404,7 @@ export default function home() {
     function funSelectProfesor() {
         setSelectPlayer(false)
         setSelectProfesor(true)
+        setUserPlayer("profesor")
     }
 
     function changeSetSelectMap() {
@@ -387,6 +415,7 @@ export default function home() {
     function funSelectStudent() {
         setSelectPlayer(false)
         setSelectStudent(true)
+        setUserPlayer("student")
     }
 
     useEffect(() => {
@@ -503,7 +532,7 @@ export default function home() {
                         }
                         {
                             actualStudent != undefined &&
-                            <img src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
+                            <img style={{right: `${xPositionStudent}px`, bottom: `${yPositionStudent}px`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
                         }
                         <div className={styles.chat} id="chat">
                             {/* {chats.map(chat => (

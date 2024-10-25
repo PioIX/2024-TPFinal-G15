@@ -1,0 +1,13 @@
+.profesor {
+    border-radius: 10px;
+    display: flexbox;
+    text-align: center;
+}
+
+.profesor h4 {
+    font-size: 100px;
+}
+
+.profesor p {
+    font-size: 30px;
+}
