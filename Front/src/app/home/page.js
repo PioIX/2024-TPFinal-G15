@@ -253,7 +253,7 @@ export default function home() {
     const handleKeyDown1 = (event) => {
         setKeyState((prev) => ({
             ...prev,
-            [event.key.toLowerCase]: true,
+            [event.key]: true,
         }));
     };
 
@@ -265,7 +265,7 @@ export default function home() {
     };
 
     const handleMovement = (player) => {
-        console.log("ENTRE AL EVENTO", event.key); // Para depurar
+        //console.log("ENTRE AL EVENTO", event.key); // Para depurar
         if (keyState['W'] || keyState['w']) {
             if (player == "profesor") {
                 if (yPositionProfesor - 5 > 0) {
@@ -310,7 +310,7 @@ export default function home() {
 
     useEffect(() => {
         handleMovement(userPlayer);
-        console.log(keyState)
+        //console.log(keyState)
     }, [keyState]);
 
     function handleRight() {
@@ -385,6 +385,30 @@ export default function home() {
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
+    useEffect(() => {
+        if(!socket)
+            return
+        
+        socket.on("pingAll", (data) => {
+            console.log(data);
+        })
+
+        
+    },[socket,isConnected])
+
+    useEffect(() => {
+        console.log("assasaa")
+        function pingAll() {
+            socket.emit("pingAll", {
+                xPositionProfesor: xPositionProfesor,
+                yPositionProfesor: yPositionProfesor
+                } //Se lo mando como objeto
+            );
+            console.log("assasaa")
+        }
+
+        pingAll();
+    },[xPositionProfesor,yPositionProfesor])
     return (
         <>
             {
