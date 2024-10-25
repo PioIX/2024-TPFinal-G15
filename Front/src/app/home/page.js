@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import styles from "./page.module.css";
 import Mapa from "@/components/Mapa";
+import Title from "@/components/Title";
 
 export default function home() {
     const [theme, setTheme] = useState("light");
@@ -162,7 +163,7 @@ export default function home() {
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }])
     const [alumnos, setAlumnos] = useState([{ name: "Maraval", description: "Pelado insoportable." }, { name: "Lujan", description: "Experta en quejas" }, { name: "Tomi", description: "Pollera" }, { name: "Cachete", description: "Traga" }, { name: "Mica", description: "Gimnasta" }, { name: "May", description: "Gei" }, { name: "Candela", description: "Ex comu" }, { name: "Lucas", description: "Judio" }, { name: "Juan", description: "Golpeado" }, { name: "Agus", description: "El primo" }, { name: "Tomi Beli", description: "Anti Pala" }])
-    const [mapas, setMapas] =useState (["sale1", "sale2", "sale3"])
+    const [mapas, setMapas] =useState (["Fondo cancha", "Fondo espacio", "Fondo Maria", "Fondo montaña", "Fondo playa", "Fondo selva"])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
     const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(0)
     const [mapaSeleccionado, setMapaSeleccionado] = useState (0)
@@ -446,7 +447,7 @@ export default function home() {
         
     },[socket,isConnected])
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("assasaa")
         function pingAll() {
             socket.emit("pingAll", {
@@ -458,7 +459,7 @@ export default function home() {
         }
 
         pingAll();
-    },[xPositionProfesor,yPositionProfesor])
+    },[xPositionProfesor,yPositionProfesor])*/
     return (
         <>
             {
@@ -496,6 +497,8 @@ export default function home() {
             {
                 selectProfesor === true &&
                 <>
+                <Title titulo="Elegí tu personaje"/>
+
                     <div className={styles.bodySelectProfesor}>
                         <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
@@ -511,6 +514,7 @@ export default function home() {
             {
                 selectStudent === true &&
                 <>
+                <Title titulo="Elegí tu personaje"/>
                     <div className={styles.bodySelectProfesor}>
                         <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
