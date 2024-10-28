@@ -497,24 +497,28 @@ export default function home() {
             {
                 selectProfesor === true &&
                 <>
-                <Title titulo="Elegí tu personaje"/>
+                <div className={styles.bodyPersonaje}>
+                    <Title className={styles.title} titulo="Elegí tu personaje"/>
 
-                    <div className={styles.bodySelectProfesor}>
-                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
-                        <div className={styles.selectProfesor}>
-                            <Profesor name={profesores[profesorSeleccionado].name} description={profesores[profesorSeleccionado].description} />
-                            <div className={styles.selectProfesorDiv}>
-                                <button onClick={changeSelectProfesor}>Listo</button>
+                        <div className={styles.bodySelectProfesor}>
+                            <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
+                            <div className={styles.selectProfesor}>
+                                <Profesor name={profesores[profesorSeleccionado].name} description={profesores[profesorSeleccionado].description} />
+                                <div className={styles.selectProfesorDiv}>
+                                    <button onClick={changeSelectProfesor}>Listo</button>
+                                </div>
                             </div>
+                            <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                         </div>
-                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
-                    </div>
+
+                </div>
                 </>
             }
             {
                 selectStudent === true &&
                 <>
-                <Title titulo="Elegí tu personaje"/>
+                <div className={styles.bodyPersonaje}>
+                    <Title className={styles.title} titulo="Elegí tu personaje"/>
                     <div className={styles.bodySelectProfesor}>
                         <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
@@ -525,12 +529,15 @@ export default function home() {
                         </div>
                         <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                     </div>
+                </div>    
                 </>
             }
             {
                 selectMap === true &&
                 <>
-                <div className={styles.bodySelectProfesor}>
+                <div className={styles.bodyPersonaje}>
+                    <Title className={styles.title} titulo="Elegí el mapa"/>
+                    <div className={styles.bodySelectProfesor}>
                         <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
                             <Mapa name={mapas[mapaSeleccionado]} />
@@ -540,7 +547,7 @@ export default function home() {
                         </div>
                         <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                     </div>
-                    
+                </div>    
                 </>
             }
             {
