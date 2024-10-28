@@ -177,8 +177,8 @@ export default function home() {
     const [xPositionStudent, setXStudent] = useState(10);
     const [yPositionProfesor, setYProfesor] = useState(5);
     const [yPositionStudent, setYStudent] = useState(5);
-
-
+    const [listoProfesor, setListoProfesor] = useState(false);
+    const [listoAlumno, setListoAlumno] = useState(false);
     function handleContador() {
         setContador(true)
     }
@@ -411,6 +411,10 @@ export default function home() {
     function changeSetSelectMap() {
         setSelectMap(false)
         handleContador()
+        if(userPlayer === "profesor"){
+        setListoProfesor(true)}
+        if(userPlayer === "student"){
+            setListoAlumno(true)}
     }
 
     function funSelectStudent() {
@@ -435,7 +439,7 @@ export default function home() {
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (socket){
             console.log("ENTRE EN LA FUNCION PINGALL")
             socket.emit("pingAll",{
@@ -444,7 +448,29 @@ export default function home() {
                 //Se lo mando como objeto
             );
         }
-    }, [xPositionProfesor, yPositionProfesor]);
+    }, [xPositionProfesor, yPositionProfesor]);*/
+    useEffect(() => {
+        if (socket){
+            socket.emit("pingAll",{
+                
+                listoProfesor, listoAlumno}
+                //Se lo mando como objeto
+            );
+        }
+    }, [listoProfesor, listoAlumno]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on("pingAll", (data) => {
+            console.log("Me llego el evento pingAll", data)
+        });
+
+        return () => {
+            socket.off("message")
+        }
+    }, [socket, isConnected]);
+
 
     return (
         <>
