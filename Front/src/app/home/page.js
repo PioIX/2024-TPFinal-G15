@@ -93,7 +93,7 @@ export default function home() {
             const result = await response.json();
 
             if (result.user) {
-                setActualUser([result.user[0].userId, result.user[0].username])
+                setActualUser([result.user[0].userid, result.user[0].username])
                 alert("Inicio de sesión correcto")
                 setUsername("")
                 setPassword("")
@@ -131,33 +131,7 @@ export default function home() {
     //MARK: Socket
     const { socket, isConnected } = useSocket();
 
-    useEffect(() => {
-        if (!socket) return;
-
-        socket.on("pingAll", (data) => {
-            console.log("Me llego el evento pingAll", data)
-        });
-
-        socket.on("newRoom", (data) => {
-            setNewRoomUser(data)
-            if (data.user === actualUser[1]) {
-                console.log("New Room Created", data)
-                console.log("New Room Created, User: ", data)
-            }
-        });
-
-        socket.on("newMessage", (data) => {
-            if (data.message.message.userId != actualUser[0]) {
-                console.log("Mensaje de la sala: ", data)
-                setNewMessage(data)
-            }
-        })
-
-        return () => {
-            socket.off("message")
-        }
-    }, [socket, isConnected]);
-
+    
     const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }])
@@ -435,16 +409,55 @@ export default function home() {
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
+    
     useEffect(() => {
-        if (socket){
-            console.log("ENTRE EN LA FUNCION PINGALL")
+        if (socket && userPlayer === "profesor" && actualProfesor != undefined){
+            console.log("ENTRE EN LA FUNCION PINGALL PROFESOR")
             socket.emit("pingAll",{
                 xPositionProfesor: xPositionProfesor,
-                yPositionProfesor: yPositionProfesor}
+                yPositionProfesor: yPositionProfesor,
+                actualProfesor: actualProfesor,
+                userId: actualUser[0]}
                 //Se lo mando como objeto
             );
         }
-    }, [xPositionProfesor, yPositionProfesor]);
+    }, [xPositionProfesor, yPositionProfesor, userPlayer, actualProfesor]);
+
+    useEffect(() => {
+        if (socket && userPlayer === "student" && actualStudent != undefined){
+            console.log("ENTRE EN LA FUNCION PINGALL ALUMNO")
+            socket.emit("pingAll",{
+                xPositionStudent: xPositionStudent,
+                yPositionStudent: yPositionStudent,
+                actualStudent: actualStudent,
+                userId: actualUser[0]
+            }
+            //Se lo mando como objeto
+        );
+        }
+    }, [xPositionStudent, yPositionStudent, userPlayer, actualStudent, actualUser]);
+
+
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on("pingAll", (data) => {
+            console.log(actualUser[0])
+            if (data.message.userId != actualUser[0] && userPlayer === "profesor"){
+                setXStudent(data.message.xPositionStudent)
+                setYStudent(data.message.yPositionStudent)
+                setActualStudent(data.message.actualStudent)
+            } else if (data.message.userId != actualUser[0] && userPlayer === "student"){
+                setXProfesor(data.message.xPositionProfesor)
+                setYProfesor(data.message.yPositionProfesor)
+                setActualProfesor(data.message.actualProfesor)
+            }
+        });
+
+        return () => {
+            socket.off("message")
+        }
+    }, [socket, isConnected, actualUser, userPlayer]);
 
     return (
         <>
