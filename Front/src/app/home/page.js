@@ -338,11 +338,19 @@ export default function home() {
     }
 
     function funListo(){
-        if(userPlayer === "profesor"){
+        if (userPlayer === "profesor"){
             setListoProfesor(true)
+            socket.emit("pingListo", {
+                userId: actualUser[0],
+                listoProfesor: true
+            })
         }
-        if(userPlayer === "student"){
+        if (userPlayer === "student"){
             setListoAlumno(true)
+            socket.emit("pingListo", {
+                userId: actualUser[0],
+                listoAlumno: true
+            })
         }
     }
 
@@ -376,18 +384,7 @@ export default function home() {
                 //Se lo mando como objeto
             );
         }
-     }, [xPositionProfesor, yPositionProfesor, userPlayer, actualProfesor]);
-  
-    useEffect(() => {
-        if (socket){
-            socket.emit("pingAll",{
-                listoProfesor,
-                listoAlumno}
-                //Se lo mando como objeto
-            );
-        }
-    }, [listoProfesor, listoAlumno]);
-  
+    }, [xPositionProfesor, yPositionProfesor, userPlayer, actualProfesor]);
 
     useEffect(() => {
         if (socket && userPlayer === "student" && actualStudent != undefined){
@@ -403,21 +400,16 @@ export default function home() {
     }, [xPositionStudent, yPositionStudent, userPlayer, actualStudent, actualUser]);
 
     useEffect(() => {
-        if (socket && listo === true) {
-            socket.emit("pingListo", {
-                listoAlumno: listoAlumno,
-                listoProfesor: listoProfesor,
-                userId: actualUser[0]
-            })
+        console.log(listoAlumno, listoProfesor)
+        if (socket && listoAlumno === true && listoProfesor === true){
+            setListo(false)
         }
-    }, [listo, listoAlumno, listoProfesor]);
+    }, [listoProfesor, listoAlumno]);
 
     useEffect(() => {
         if (!socket) return;
 
         socket.on("pingAll", (data) => {
-            console.log("Me llego el evento pingAll", data)
-            console.log(actualUser[0])
             if (data.message.userId != actualUser[0] && userPlayer === "profesor"){
                 setXStudent(data.message.xPositionStudent)
                 setYStudent(data.message.yPositionStudent)
@@ -426,6 +418,16 @@ export default function home() {
                 setXProfesor(data.message.xPositionProfesor)
                 setYProfesor(data.message.yPositionProfesor)
                 setActualProfesor(data.message.actualProfesor)
+            }
+        });
+
+        socket.on("pingListo", (data) => {
+            if (data.info.userId != actualUser[0] && userPlayer == "profesor") {
+                console.log(data.info)
+                setListoAlumno(data.info.listoAlumno)
+            } else if (data.info.userId != actualUser[0] && userPlayer == "student") {
+                console.log(data.info)
+                setListoProfesor(data.info.listoProfesor)
             }
         });
 
@@ -520,11 +522,11 @@ export default function home() {
                         <div className={styles.selectProfesor}>
                             <h2>¿Estas listo?</h2>
                             {
-                                (listoAlumno === true  && listoProfesor === false) || (listoProfesor === true && listoAlumno === false) &&
-                                <p></p>
+                                (listoProfesor === true && listoAlumno === false) || (listoProfesor === false && listoAlumno === true)  &&
+                                <p>Falta que alguno ponga listo</p>
                             }
                             <div className={styles.selectProfesorDiv}>
-                                <button onClick={changeSetSelectMap}>Listo</button>
+                                <button onClick={funListo}>Listo</button>
                             </div>
                         </div>
                     </div>

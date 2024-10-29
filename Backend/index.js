@@ -186,6 +186,11 @@ io.on("connection", (socket) => {
 		io.emit('pingAll', { event: "Ping to all", message: data });
 	});
 
+	socket.on('pingListo', data => {
+		console.log("PING LISTO: ", data);
+		io.emit('pingListo', { event: "Ping to listo", info: data });
+	});
+
 	socket.on('newRoom', data => {
 		req.session.username = data.username
 		console.log("New Room: ", data);
