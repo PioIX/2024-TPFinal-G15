@@ -137,6 +137,7 @@ export default function home() {
     const [xPositionStudent, setXStudent] = useState(10);
     const [yPositionProfesor, setYProfesor] = useState(5);
     const [yPositionStudent, setYStudent] = useState(5);
+    const [listo, setListo] = useState(false)
     const [listoProfesor, setListoProfesor] = useState(false);
     const [listoAlumno, setListoAlumno] = useState(false);
     function handleContador() {
@@ -327,16 +328,22 @@ export default function home() {
     function changeSetSelectMap() {
         setSelectMap(false)
         handleContador()
-        if(userPlayer === "profesor"){
-        setListoProfesor(true)}
-        if(userPlayer === "student"){
-            setListoAlumno(true)}
+        setListo(true)
     }
 
     function funSelectStudent() {
         setSelectPlayer(false)
         setSelectStudent(true)
         setUserPlayer("student")
+    }
+
+    function funListo(){
+        if(userPlayer === "profesor"){
+            setListoProfesor(true)
+        }
+        if(userPlayer === "student"){
+            setListoAlumno(true)
+        }
     }
 
     useEffect(() => {
@@ -374,8 +381,8 @@ export default function home() {
     useEffect(() => {
         if (socket){
             socket.emit("pingAll",{
-                
-                listoProfesor, listoAlumno}
+                listoProfesor,
+                listoAlumno}
                 //Se lo mando como objeto
             );
         }
@@ -394,6 +401,16 @@ export default function home() {
         );
         }
     }, [xPositionStudent, yPositionStudent, userPlayer, actualStudent, actualUser]);
+
+    useEffect(() => {
+        if (socket && listo === true) {
+            socket.emit("pingListo", {
+                listoAlumno: listoAlumno,
+                listoProfesor: listoProfesor,
+                userId: actualUser[0]
+            })
+        }
+    }, [listo, listoAlumno, listoProfesor]);
 
     useEffect(() => {
         if (!socket) return;
@@ -484,7 +501,7 @@ export default function home() {
             {
                 selectMap === true &&
                 <>
-                <div className={styles.bodySelectProfesor}>
+                    <div className={styles.bodySelectProfesor}>
                         <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
                             <Mapa name={mapas[mapaSeleccionado]} />
@@ -494,11 +511,27 @@ export default function home() {
                         </div>
                         <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                     </div>
-                    
                 </>
             }
             {
-                actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false && selectMap == false &&
+                listo === true &&
+                <>
+                    <div className={styles.bodySelectProfesor}>
+                        <div className={styles.selectProfesor}>
+                            <h2>¿Estas listo?</h2>
+                            {
+                                (listoAlumno === true  && listoProfesor === false) || (listoProfesor === true && listoAlumno === false) &&
+                                <p></p>
+                            }
+                            <div className={styles.selectProfesorDiv}>
+                                <button onClick={changeSetSelectMap}>Listo</button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            }
+            {
+                actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false && selectMap == false && listo == false &&
                 <>
                     <div style={{backgroundImage: `url('/${mapas[mapaSeleccionado]}.jpg')`}} className={styles.body}>
                         <div className={styles.topbar}>
