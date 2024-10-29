@@ -468,12 +468,12 @@ export default function home() {
                     <div className={styles.bodyLogin}>
                         <div className={styles.login}>
                             <h2>Login</h2>
-                            <h3>User</h3>
+                            <h3>Usuario</h3>
                             <InputLogin type={"text"} placeholder={"Ingrese su usuario"} onChange={handleUsernameChange} value={username} />
-                            <h3>Password</h3>
+                            <h3>Contraseña</h3>
                             <InputLogin type={"password"} placeholder={"Ingrese su contraseña"} onChange={handlePasswordChange} value={password} />
                             <div>
-                                <button onClick={login}>Login</button>
+                                <button onClick={login}>Ingresar</button>
                                 <button onClick={register}>Registrarse</button>
                             </div>
                         </div>

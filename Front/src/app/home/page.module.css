@@ -139,11 +139,12 @@
 }
 
 .login h2 {
-  font-size: 30px;
+  font-size: 38px;
   margin: 5px 0 5px 0;
 }
 
 .login h3 {
+  font-size: 24px;
   margin: 10px 0 10px 0;
 }
 
@@ -317,4 +318,8 @@
   position: absolute;
   right: 10px;
   bottom: 5px;
+}
+
+.textosLogin {
+  font-size: 70px;
 }
