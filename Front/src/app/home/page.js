@@ -137,8 +137,8 @@ export default function home() {
     const [xPositionStudent, setXStudent] = useState(10);
     const [yPositionProfesor, setYProfesor] = useState(5);
     const [yPositionStudent, setYStudent] = useState(5);
-
-
+    const [listoProfesor, setListoProfesor] = useState(false);
+    const [listoAlumno, setListoAlumno] = useState(false);
     function handleContador() {
         setContador(true)
     }
@@ -327,6 +327,10 @@ export default function home() {
     function changeSetSelectMap() {
         setSelectMap(false)
         handleContador()
+        if(userPlayer === "profesor"){
+        setListoProfesor(true)}
+        if(userPlayer === "student"){
+            setListoAlumno(true)}
     }
 
     function funSelectStudent() {
@@ -365,7 +369,18 @@ export default function home() {
                 //Se lo mando como objeto
             );
         }
-    }, [xPositionProfesor, yPositionProfesor, userPlayer, actualProfesor]);
+     }, [xPositionProfesor, yPositionProfesor, userPlayer, actualProfesor]);
+  
+    useEffect(() => {
+        if (socket){
+            socket.emit("pingAll",{
+                
+                listoProfesor, listoAlumno}
+                //Se lo mando como objeto
+            );
+        }
+    }, [listoProfesor, listoAlumno]);
+  
 
     useEffect(() => {
         if (socket && userPlayer === "student" && actualStudent != undefined){
@@ -374,18 +389,17 @@ export default function home() {
                 xPositionStudent: xPositionStudent,
                 yPositionStudent: yPositionStudent,
                 actualStudent: actualStudent,
-                userId: actualUser[0]
-            }
+                userId: actualUser[0]}
             //Se lo mando como objeto
         );
         }
     }, [xPositionStudent, yPositionStudent, userPlayer, actualStudent, actualUser]);
 
-
     useEffect(() => {
         if (!socket) return;
 
         socket.on("pingAll", (data) => {
+            console.log("Me llego el evento pingAll", data)
             console.log(actualUser[0])
             if (data.message.userId != actualUser[0] && userPlayer === "profesor"){
                 setXStudent(data.message.xPositionStudent)
