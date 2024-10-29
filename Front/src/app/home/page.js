@@ -117,20 +117,6 @@ export default function home() {
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     };
-
-    function modoOscuro() {
-        var element = document.body;
-        element.classList.toggle(styles.dark_mode);
-        if (theme == "light") {
-            setTheme("dark")
-        } else {
-            setTheme("light")
-        }
-    }
-
-    //MARK: Socket
-    const { socket, isConnected } = useSocket();
-
     
     const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
@@ -189,46 +175,6 @@ export default function home() {
     const altoPantalla = window.innerHeight
     const anchoPantalla = window.outerWidth
 
-    // const handleMovement = (event) => {
-    //     console.log("ENTRE AL EVENTO", event.key); // Para depurar
-    //     if (event.key === 'W' || event.key === "w") {
-    //             console.log("toque W", yPositionProfesor)
-    //             if (yPositionProfesor - 1 > 0) {
-    //                 setYProfesor(yPositionProfesor - 5)
-    //             }
-    //     }
-
-    //     if (event.key === "A" || event.key === "a") {
-    //         if (xPositionProfesor - 1 > 0) {
-    //             setXProfesor(xPositionProfesor - 5)
-    //         }
-    //     }
-
-    //     if (event.key === "S" || event.key === "s") {
-    //         if (yPositionProfesor + 1 < altoPantalla - 90) {
-    //             setYProfesor(yPositionProfesor + 5)
-    //         }
-    //     }
-
-    //     if (event.key === "D" || event.key === "d") {
-    //         if (xPositionProfesor + 1 < anchoPantalla - 90) {
-    //             setXProfesor(xPositionProfesor + 5)
-    //         }
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     // Añadir el evento al montar el componente
-    //     if (actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false){
-    //         window.addEventListener('keydown', handleMovement);
-    //     }
-
-    //     // Limpiar el evento al desmontar
-    //     return () => {
-    //         window.removeEventListener('keydown', handleMovement);
-    //     };
-    // }, [xPositionProfesor, yPositionProfesor, actualUser, selectProfesor, selectStudent, selectPlayer]);
-
     const [keyState, setKeyState] = useState({});
 
     const handleKeyDown1 = (event) => {
@@ -257,7 +203,6 @@ export default function home() {
                     setYStudent(yPositionStudent + 5)
                 }
             }
-            // Mover hacia arriba y a la derecha
         }
         if (keyState['A'] || keyState['a']){
             if (player == "profesor") {
@@ -280,7 +225,6 @@ export default function home() {
                     setYStudent(yPositionStudent - 5)
                 }
             }
-            // Mover hacia abajo
         }
         if (keyState['D'] || keyState['d']) {
             if (player == "profesor") {
@@ -292,9 +236,7 @@ export default function home() {
                     setXStudent(xPositionStudent - 5)
                 }
             }
-            // Mover hacia abajo
         }
-        // Agrega más combinaciones según sea necesario
     };
 
     useEffect(() => {
@@ -409,6 +351,8 @@ export default function home() {
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
+    //MARK: Socket
+    const { socket, isConnected } = useSocket();
     
     useEffect(() => {
         if (socket && userPlayer === "profesor" && actualProfesor != undefined){
