@@ -414,20 +414,19 @@ export default function home() {
             if (data.message.userId != actualUser[0] && userPlayer === "profesor"){
                 setXStudent(data.message.xPositionStudent)
                 setYStudent(data.message.yPositionStudent)
-                setActualStudent(data.message.actualStudent)
             } else if (data.message.userId != actualUser[0] && userPlayer === "student"){
                 setXProfesor(data.message.xPositionProfesor)
                 setYProfesor(data.message.yPositionProfesor)
-                setActualProfesor(data.message.actualProfesor)
             }
         });
 
         socket.on("pingListo", (data) => {
-            if (data.info.userId != actualUser[0] && userPlayer == "profesor") {
-                console.log(data.info)
+            if (userPlayer == "profesor") {
+                setActualStudent(data.info.actualStudent)
                 setListoAlumno(data.info.listoAlumno)
             } else if (data.info.userId != actualUser[0] && userPlayer == "student") {
                 console.log(data.info)
+                setActualProfesor(data.info.actualProfesor)
                 setListoProfesor(data.info.listoProfesor)
             }
         });

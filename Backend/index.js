@@ -15,7 +15,7 @@ const MySQL = require('./modulos/mysql');				// Añado el archivo mysql.js prese
 const session = require('express-session');				// Para el manejo de las variables de sesión
 const cors = require('cors');
 
-const datosUsuarios = {actualProfesor: "", actualStudent: "", listoProfesor: false, listoalumno: false}
+const datosUsuarios = {actualProfesor: "", actualStudent: "", listoProfesor: false, listoAlumno: false}
 
 const app = express();                                  // Inicializo express para el manejo de las peticiones
 
@@ -66,11 +66,6 @@ app.get('/', (req, res) => {
 	console.log(`[REQUEST - ${req.method}] ${req.url}`);
 });
 
-app.get('/getUsers', async function(req,res) {
-	const result = await MySQL.realizarQuery(`SELECT * FROM Users;`);
-	res.send(result);
-});
-
 app.post('/getUser', async function(req,res) {
 	const username = req.body.username
 	const result = await MySQL.realizarQuery(`SELECT * FROM Users WHERE username = "${username}";`);
@@ -103,67 +98,6 @@ app.post('/register', async function(req, res) {
 	console.log(result2)
 });
 
-app.post('/getChats', async function(req,res) {
-	const userId = req.body.userId
-	const result = await MySQL.realizarQuery(`SELECT Chats.chatId, userid, name FROM Chats INNER JOIN Chats_users ON Chats_users.chatId = Chats.chatId WHERE userid = ${userId};`);
-	res.send(result);
-});
-
-app.post('/getChatsUsers', async function(req,res) {
-	const userId = req.body.userId;
-	const result = await MySQL.realizarQuery(`SELECT Chats_users.chatId, name FROM Chats_users INNER JOIN Chats ON Chats_users.chatId = Chats.chatId WHERE userid = ${userId};`);
-	res.send({chats: result});
-});
-
-app.get('/getMessages', async function(req,res) {
-	const chatId = req.body.chatId
-	const result = await MySQL.realizarQuery(`SELECT * FROM Messages`);
-	res.send(result);
-});
-
-app.post('/getMessagesChat', async function(req,res) {
-	const chatId = req.body.chatId;
-	const result = await MySQL.realizarQuery(`SELECT Messages.userid, chatId, message, username FROM Messages INNER JOIN Users ON Users.userid = Messages.userid WHERE chatId = ${chatId};`);
-	res.send({messages: result});
-});
-
-app.post('/insertChat', async function(req, res) {
-	const name = req.body.name;
-	const userId = req.body.userId
-	const result = await MySQL.realizarQuery(`INSERT INTO Chats (name)
-	VALUES ("${name}")`);
-	const result2 = await MySQL.realizarQuery(`SELECT Chats.chatId FROM Chats INNER JOIN Chats_users WHERE name = "${name}" AND userid = ${userId};`)
-	res.send({message: 'Chat agregado a la tabla', result: result2});
-});
-
-app.post('/insertChats_users', async function(req, res) {
-	const chatId = req.body.chatId;
-	const userId1 = req.body.userId1;
-	const userId2 = req.body.userId2
-	try {
-		const result = await MySQL.realizarQuery(`INSERT INTO Chats_users (chatId, userid)
-		VALUES (${chatId}, ${userId1})`);
-		const result2 = await MySQL.realizarQuery(`INSERT INTO Chats_users (chatId, userid)
-		VALUES (${chatId}, ${userId2})`);
-		res.send({message: 'Chat agregado a la tabla', result: result});
-	  } catch (e) {
-		logMyErrors(e); // pasa el objeto de la excepción al manejador de errores
-	  }
-});
-
-app.post('/insertMessage', async function(req, res) {
-	const userId = req.body.userId;
-	const chatId = req.body.chatId;
-	const message = req.body.message;
-	try {
-		const result = await MySQL.realizarQuery(`INSERT INTO Messages (userid, message, chatId)
-		VALUES ("${userId}", "${message}", ${chatId})`);
-		res.send({message: 'Mensasje agregado a la tabla', result: result});
-	  } catch (e) {
-		logMyErrors(e); // pasa el objeto de la excepción al manejador de errores
-	  }
-});
-
 io.on("connection", (socket) => {
 	const req = socket.request;
 
@@ -184,12 +118,28 @@ io.on("connection", (socket) => {
 
 	socket.on('pingAll', data => {
 		console.log("PING ALL: ", data);
+		if (data.actualProfesor){
+			datosUsuarios.actualProfesor = data.actualProfesor
+			console.log(datosUsuarios)
+		}
+		if (data.actualStudent){
+			datosUsuarios.actualStudent = data.actualStudent
+			console.log(datosUsuarios)
+		}
 		io.emit('pingAll', { event: "Ping to all", message: data });
 	});
 
 	socket.on('pingListo', data => {
 		console.log("PING LISTO: ", data);
-		io.emit('pingListo', { event: "Ping to listo", info: data });
+		if (data.listoProfesor){
+			datosUsuarios.listoProfesor = data.listoProfesor
+			console.log(datosUsuarios)
+		}
+		if (data.listoAlumno){
+			datosUsuarios.listoAlumno = data.listoAlumno
+			console.log(datosUsuarios)
+		}
+		io.emit('pingListo', { event: "Ping to listo", info: datosUsuarios });
 	});
 
 	socket.on('disconnect', () => {
