@@ -15,6 +15,7 @@ const MySQL = require('./modulos/mysql');				// Añado el archivo mysql.js prese
 const session = require('express-session');				// Para el manejo de las variables de sesión
 const cors = require('cors');
 
+const datosUsuarios = {actualProfesor: "", actualStudent: "", listoProfesor: false, listoalumno: false}
 
 const app = express();                                  // Inicializo express para el manejo de las peticiones
 
@@ -189,16 +190,6 @@ io.on("connection", (socket) => {
 	socket.on('pingListo', data => {
 		console.log("PING LISTO: ", data);
 		io.emit('pingListo', { event: "Ping to listo", info: data });
-	});
-
-	socket.on('newRoom', data => {
-		req.session.username = data.username
-		console.log("New Room: ", data);
-		io.emit('newRoom', { event: "New Room Created", user: req.session.username });
-	});
-
-	socket.on('sendMessage', data => {
-		io.to(req.session.room).emit('newMessage', { room: req.session.room, message: data });
 	});
 
 	socket.on('disconnect', () => {

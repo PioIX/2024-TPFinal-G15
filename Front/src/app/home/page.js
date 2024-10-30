@@ -354,6 +354,7 @@ export default function home() {
         }
     }
 
+    //MARK: Contador
     useEffect(() => {
         if (seconds > 0 && contador === true) {
             const timer = setInterval(() => {
@@ -369,9 +370,6 @@ export default function home() {
         const remainingSeconds = sec % 60;
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
-
-    //MARK: Socket
-    const { socket, isConnected } = useSocket();
     
     useEffect(() => {
         if (socket && userPlayer === "profesor" && actualProfesor != undefined){
@@ -406,6 +404,9 @@ export default function home() {
         }
     }, [listoProfesor, listoAlumno]);
 
+    //MARK: Socket
+    const { socket, isConnected } = useSocket();
+    
     useEffect(() => {
         if (!socket) return;
 
@@ -436,6 +437,7 @@ export default function home() {
         }
     }, [socket, isConnected, actualUser, userPlayer]);
 
+    //MARK: Pagina
     return (
         <>
             {
@@ -461,7 +463,7 @@ export default function home() {
                 <>
                     <div className={styles.bodySelectPlayer}>
                         <div className={styles.selectPlayer}>
-                            <h2>¿Como vas a jugar?</h2>
+                            <h2>¿Cómo vas a jugar?</h2>
                             <div>
                                 <button onClick={funSelectProfesor}>Profesor</button>
                                 <button onClick={funSelectStudent}>Alumno</button>
@@ -520,9 +522,9 @@ export default function home() {
                 <>
                     <div className={styles.bodySelectProfesor}>
                         <div className={styles.selectProfesor}>
-                            <h2>¿Estas listo?</h2>
+                            <h2>¿Estás listo?</h2>
                             {
-                                (listoProfesor === true && listoAlumno === false) || (listoProfesor === false && listoAlumno === true)  &&
+                                ((listoProfesor === true && listoAlumno === false) || (listoProfesor === false && listoAlumno === true))  &&
                                 <p>Falta que alguno ponga listo</p>
                             }
                             <div className={styles.selectProfesorDiv}>
