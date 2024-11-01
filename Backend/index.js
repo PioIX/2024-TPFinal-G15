@@ -131,15 +131,24 @@ io.on("connection", (socket) => {
 
 	socket.on('pingListo', data => {
 		console.log("PING LISTO: ", data);
-		if (data.listoProfesor){
-			datosUsuarios.listoProfesor = data.listoProfesor
-			console.log(datosUsuarios)
+		if (data != undefined){
+			if (data.listoProfesor){
+				datosUsuarios.listoProfesor = data.listoProfesor
+				console.log(datosUsuarios)
+			}
+			if (data.listoAlumno){
+				datosUsuarios.listoAlumno = data.listoAlumno
+				console.log(datosUsuarios)
+			}
+			if (data.inicioPartida){
+				datosUsuarios.actualProfesor = ""
+				datosUsuarios.actualStudent = ""
+				datosUsuarios.listoProfesor = ""
+				datosUsuarios.listoAlumno = ""
+				return
+			}
+			io.emit('pingListo', { event: "Ping to listo", info: datosUsuarios });
 		}
-		if (data.listoAlumno){
-			datosUsuarios.listoAlumno = data.listoAlumno
-			console.log(datosUsuarios)
-		}
-		io.emit('pingListo', { event: "Ping to listo", info: datosUsuarios });
 	});
 
 	socket.on('disconnect', () => {

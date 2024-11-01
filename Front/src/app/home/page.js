@@ -356,7 +356,7 @@ export default function home() {
 
     //MARK: Contador
     useEffect(() => {
-        if (seconds > 0 && contador === true) {
+        if (seconds > 0 && contador === true && listoAlumno === true && listoProfesor === true) {
             const timer = setInterval(() => {
                 setSeconds(prevSeconds => prevSeconds - 1);
             }, 1000);
@@ -401,6 +401,9 @@ export default function home() {
         console.log(listoAlumno, listoProfesor)
         if (socket && listoAlumno === true && listoProfesor === true){
             setListo(false)
+            socket.emit("pingListo", {
+                inicioPartida: true
+            })
         }
     }, [listoProfesor, listoAlumno]);
 
