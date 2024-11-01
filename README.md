@@ -13,3 +13,4 @@ aula.
 - El profesor comienza la partida desde la sala de profesores y los alumnos en su aula. 
 - Si se termina el tiempo antes de que el alumno sea atrapado, se saca un promedio de todas las notas que fue recolectando durante la partida. 
 - Si es mayor a 6 gana!
+![159329ec0520191a79b8cd0cd342ecc8](https://github.com/user-attachments/assets/bcfcfdf2-12e8-4b63-b92c-cfa43f49129b)
