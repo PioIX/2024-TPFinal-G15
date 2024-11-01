@@ -51,5 +51,5 @@ Los jugadores van a tener para elegir distintos mapas:
 
 
 ![0](https://github.com/user-attachments/assets/309f3e27-a4c6-4a02-b671-c069df8b2742)
-
+![0](https://github.com/user-attachments/assets/67179a22-0186-4ba7-945f-76da042b4b07)
 
