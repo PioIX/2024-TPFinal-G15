@@ -98,6 +98,10 @@ app.post('/register', async function(req, res) {
 	console.log(result2)
 });
 
+app.get('/getPlayer', function(req,res) {
+	res.send(datosUsuarios);
+});
+
 io.on("connection", (socket) => {
 	const req = socket.request;
 
@@ -127,6 +131,18 @@ io.on("connection", (socket) => {
 			console.log(datosUsuarios)
 		}
 		io.emit('pingAll', { event: "Ping to all", message: data });
+	});
+
+	socket.on('pingPlayer', data => {
+		console.log("PING PLAYER: ", data);
+		if (data.actualProfesor){
+			datosUsuarios.actualProfesor = data.actualProfesor
+			console.log(datosUsuarios)
+		}
+		if (data.actualStudent){
+			datosUsuarios.actualStudent = data.actualStudent
+			console.log(datosUsuarios)
+		}
 	});
 
 	socket.on('pingListo', data => {

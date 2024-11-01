@@ -319,10 +319,27 @@ export default function home() {
         setSelectMap(true)
     }
 
-    function funSelectProfesor() {
-        setSelectPlayer(false)
-        setSelectProfesor(true)
-        setUserPlayer("profesor")
+    async function funSelectProfesor() {
+        const response = await fetch('http://localhost:4000/getPlayer', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta de la red');
+        const result = await response.json();
+
+        console.log(result)
+
+        if (result.actualProfesor === "") {
+            setSelectPlayer(false)
+            setSelectProfesor(true)
+            setUserPlayer("profesor")
+        } else {
+            alert("El profesor ya ha sido seleccionado")
+        }
     }
 
     function changeSetSelectMap() {
@@ -331,10 +348,27 @@ export default function home() {
         setListo(true)
     }
 
-    function funSelectStudent() {
-        setSelectPlayer(false)
-        setSelectStudent(true)
-        setUserPlayer("student")
+    async function funSelectStudent() {
+        const response = await fetch('http://localhost:4000/getPlayer', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta de la red');
+        const result = response.json();
+
+        console.log(result)
+
+        if (result.actualStudent === "") {
+            setSelectPlayer(false)
+            setSelectStudent(true)
+            setUserPlayer("student")
+        } else {
+            alert("El profesor ya ha sido seleccionado")
+        }
     }
 
     function funListo(){
@@ -423,11 +457,15 @@ export default function home() {
             }
         });
 
+        socket.on("pingPlayer", (data) => {
+            console.log(data)
+        });
+
         socket.on("pingListo", (data) => {
             if (userPlayer == "profesor") {
                 setActualStudent(data.info.actualStudent)
                 setListoAlumno(data.info.listoAlumno)
-            } else if (data.info.userId != actualUser[0] && userPlayer == "student") {
+            } else if (userPlayer == "student") {
                 console.log(data.info)
                 setActualProfesor(data.info.actualProfesor)
                 setListoProfesor(data.info.listoProfesor)
