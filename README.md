@@ -42,3 +42,14 @@ Los jugadores van a tener para elegir distintos mapas:
 - El juego termina cuando se acaba el tiempo. Los alumnos ganan si logran un promedio superior a 6; de lo contrario, el profesor gana.
 
 
+## Alumnos
+
+- Micaela Chasares
+- Tomas Galera
+- Mayra Mosquera
+- Nicolas Salles
+
+
+![0](https://github.com/user-attachments/assets/309f3e27-a4c6-4a02-b671-c069df8b2742)
+
+
