@@ -468,6 +468,7 @@ export default function home() {
             socket.emit("pingListo", {
                 inicioPartida: true
             })
+            console.log(true)
         }
     }, [listoProfesor, listoAlumno]);
   
@@ -629,11 +630,11 @@ export default function home() {
                         </div>
                         {
                             actualProfesor != undefined &&
-                            <img style={{ left: `${xPositionProfesor}px`, top: `${yPositionProfesor}px`, background: "#F00000"}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
+                            <img style={{ left: `${xPositionProfesor}vw`, top: `${yPositionProfesor}vh`, background: "#F00000"}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
                         }
                         {
                             actualStudent != undefined &&
-                            <img style={{right: `${xPositionStudent}px`, bottom: `${yPositionStudent}px`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
+                            <img style={{right: `${xPositionStudent}vw`, bottom: `${yPositionStudent}vh`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
                         }
                         <div className={styles.chat} id="chat">
                             {/* {chats.map(chat => (
