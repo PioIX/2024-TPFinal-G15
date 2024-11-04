@@ -358,7 +358,7 @@ export default function home() {
         });
 
         if (!response.ok) throw new Error('Error en la respuesta de la red');
-        const result = response.json();
+        const result = await response.json();
 
         console.log(result)
 
@@ -388,6 +388,35 @@ export default function home() {
         }
     }
 
+    async function logOut() {
+        setActualUser("")
+        setSelectProfesor(false)
+        setSelectStudent(false)
+        setSelectPlayer(false)
+        setSelectMap(false)
+        setListo(false)
+        setActualProfesor()
+        setActualStudent()
+
+        const data = {
+            player: userPlayer,
+        }
+
+        const response = await fetch('http://localhost:4000/logOut', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta de la red');
+        const result = await response.json();
+
+        console.log(result)
+    }
+
     //MARK: Contador
     useEffect(() => {
         if (seconds > 0 && contador === true && listoAlumno === true && listoProfesor === true) {
@@ -397,7 +426,7 @@ export default function home() {
 
             return () => clearInterval(timer); // Limpiar el intervalo al desmontar
         }
-    }, [seconds, contador]);
+    }, [seconds, contador, listoAlumno, listoProfesor]);
 
     const formatTime = (sec) => {
         const minutes = Math.floor(sec / 60);
@@ -616,6 +645,7 @@ export default function home() {
                     </div>
                 </>
             }
+            <button onClick={logOut}>Log out</button>
         </>
     )
 }

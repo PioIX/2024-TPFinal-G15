@@ -102,6 +102,18 @@ app.get('/getPlayer', function(req,res) {
 	res.send(datosUsuarios);
 });
 
+app.post('/logOut', function(req,res) {
+	const player = req.body.player
+	if (player === "profesor"){
+		datosUsuarios.actualProfesor = ""
+		datosUsuarios.listoProfesor = false
+	} else if (player === "student") {
+		datosUsuarios.actualStudent = ""
+		datosUsuarios.listoAlumno = false
+	}
+	res.send({message: "log out completado", users: datosUsuarios})
+});
+
 io.on("connection", (socket) => {
 	const req = socket.request;
 
@@ -157,10 +169,11 @@ io.on("connection", (socket) => {
 				console.log(datosUsuarios)
 			}
 			if (data.inicioPartida){
+				console.log("inicio partida")
 				datosUsuarios.actualProfesor = ""
 				datosUsuarios.actualStudent = ""
-				datosUsuarios.listoProfesor = ""
-				datosUsuarios.listoAlumno = ""
+				datosUsuarios.listoProfesor = false
+				datosUsuarios.listoAlumno = false
 				return
 			}
 			io.emit('pingListo', { event: "Ping to listo", info: datosUsuarios });
