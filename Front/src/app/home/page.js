@@ -94,7 +94,7 @@ export default function home() {
             const result = await response.json();
 
             if (result.user) {
-                setActualUser([result.user[0].userId, result.user[0].username])
+                setActualUser([result.user[0].userid, result.user[0].username])
                 alert("Inicio de sesión correcto")
                 setUsername("")
                 setPassword("")
@@ -118,47 +118,7 @@ export default function home() {
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     };
-
-    function modoOscuro() {
-        var element = document.body;
-        element.classList.toggle(styles.dark_mode);
-        if (theme == "light") {
-            setTheme("dark")
-        } else {
-            setTheme("light")
-        }
-    }
-
-    //MARK: Socket
-    const { socket, isConnected } = useSocket();
-
-    useEffect(() => {
-        if (!socket) return;
-
-        socket.on("pingAll", (data) => {
-            console.log("Me llego el evento pingAll", data)
-        });
-
-        socket.on("newRoom", (data) => {
-            setNewRoomUser(data)
-            if (data.user === actualUser[1]) {
-                console.log("New Room Created", data)
-                console.log("New Room Created, User: ", data)
-            }
-        });
-
-        socket.on("newMessage", (data) => {
-            if (data.message.message.userId != actualUser[0]) {
-                console.log("Mensaje de la sala: ", data)
-                setNewMessage(data)
-            }
-        })
-
-        return () => {
-            socket.off("message")
-        }
-    }, [socket, isConnected]);
-
+    
     const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }])
@@ -178,8 +138,9 @@ export default function home() {
     const [xPositionStudent, setXStudent] = useState(10);
     const [yPositionProfesor, setYProfesor] = useState(5);
     const [yPositionStudent, setYStudent] = useState(5);
-
-
+    const [listo, setListo] = useState(false)
+    const [listoProfesor, setListoProfesor] = useState(false);
+    const [listoAlumno, setListoAlumno] = useState(false);
     function handleContador() {
         setContador(true)
     }
@@ -216,46 +177,6 @@ export default function home() {
     const altoPantalla = window.innerHeight
     const anchoPantalla = window.outerWidth
 
-    // const handleMovement = (event) => {
-    //     console.log("ENTRE AL EVENTO", event.key); // Para depurar
-    //     if (event.key === 'W' || event.key === "w") {
-    //             console.log("toque W", yPositionProfesor)
-    //             if (yPositionProfesor - 1 > 0) {
-    //                 setYProfesor(yPositionProfesor - 5)
-    //             }
-    //     }
-
-    //     if (event.key === "A" || event.key === "a") {
-    //         if (xPositionProfesor - 1 > 0) {
-    //             setXProfesor(xPositionProfesor - 5)
-    //         }
-    //     }
-
-    //     if (event.key === "S" || event.key === "s") {
-    //         if (yPositionProfesor + 1 < altoPantalla - 90) {
-    //             setYProfesor(yPositionProfesor + 5)
-    //         }
-    //     }
-
-    //     if (event.key === "D" || event.key === "d") {
-    //         if (xPositionProfesor + 1 < anchoPantalla - 90) {
-    //             setXProfesor(xPositionProfesor + 5)
-    //         }
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     // Añadir el evento al montar el componente
-    //     if (actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false){
-    //         window.addEventListener('keydown', handleMovement);
-    //     }
-
-    //     // Limpiar el evento al desmontar
-    //     return () => {
-    //         window.removeEventListener('keydown', handleMovement);
-    //     };
-    // }, [xPositionProfesor, yPositionProfesor, actualUser, selectProfesor, selectStudent, selectPlayer]);
-
     const [keyState, setKeyState] = useState({});
 
     const handleKeyDown1 = (event) => {
@@ -284,7 +205,6 @@ export default function home() {
                     setYStudent(yPositionStudent + 5)
                 }
             }
-            // Mover hacia arriba y a la derecha
         }
         if (keyState['A'] || keyState['a']){
             if (player == "profesor") {
@@ -307,7 +227,6 @@ export default function home() {
                     setYStudent(yPositionStudent - 5)
                 }
             }
-            // Mover hacia abajo
         }
         if (keyState['D'] || keyState['d']) {
             if (player == "profesor") {
@@ -319,9 +238,7 @@ export default function home() {
                     setXStudent(xPositionStudent - 5)
                 }
             }
-            // Mover hacia abajo
         }
-        // Agrega más combinaciones según sea necesario
     };
 
     useEffect(() => {
@@ -403,63 +320,194 @@ export default function home() {
         setSelectMap(true)
     }
 
-    function funSelectProfesor() {
-        setSelectPlayer(false)
-        setSelectProfesor(true)
-        setUserPlayer("profesor")
+    async function funSelectProfesor() {
+        const response = await fetch('http://localhost:4000/getPlayer', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta de la red');
+        const result = await response.json();
+
+        console.log(result)
+
+        if (result.actualProfesor === "") {
+            setSelectPlayer(false)
+            setSelectProfesor(true)
+            setUserPlayer("profesor")
+        } else {
+            alert("El profesor ya ha sido seleccionado")
+        }
     }
 
     function changeSetSelectMap() {
         setSelectMap(false)
         handleContador()
+        setListo(true)
     }
 
-    function funSelectStudent() {
+    async function funSelectStudent() {
+        const response = await fetch('http://localhost:4000/getPlayer', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta de la red');
+        const result = await response.json();
+
+        console.log(result)
+
+        if (result.actualStudent === "") {
+            setSelectPlayer(false)
+            setSelectStudent(true)
+            setUserPlayer("student")
+        } else {
+            alert("El profesor ya ha sido seleccionado")
+        }
+    }
+
+    function funListo(){
+        if (userPlayer === "profesor"){
+            setListoProfesor(true)
+            socket.emit("pingListo", {
+                userId: actualUser[0],
+                listoProfesor: true
+            })
+        }
+        if (userPlayer === "student"){
+            setListoAlumno(true)
+            socket.emit("pingListo", {
+                userId: actualUser[0],
+                listoAlumno: true
+            })
+        }
+    }
+
+    async function logOut() {
+        setActualUser("")
+        setSelectProfesor(false)
+        setSelectStudent(false)
         setSelectPlayer(false)
-        setSelectStudent(true)
-        setUserPlayer("student")
+        setSelectMap(false)
+        setListo(false)
+        setActualProfesor()
+        setActualStudent()
+
+        const data = {
+            player: userPlayer,
+        }
+
+        const response = await fetch('http://localhost:4000/logOut', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta de la red');
+        const result = await response.json();
+
+        console.log(result)
     }
 
+    //MARK: Contador
     useEffect(() => {
-        if (seconds > 0 && contador === true) {
+        if (seconds > 0 && contador === true && listoAlumno === true && listoProfesor === true) {
             const timer = setInterval(() => {
                 setSeconds(prevSeconds => prevSeconds - 1);
             }, 1000);
 
             return () => clearInterval(timer); // Limpiar el intervalo al desmontar
         }
-    }, [seconds, contador]);
+    }, [seconds, contador, listoAlumno, listoProfesor]);
 
     const formatTime = (sec) => {
         const minutes = Math.floor(sec / 60);
         const remainingSeconds = sec % 60;
         return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
+    
+    useEffect(() => {
+        if (socket && userPlayer === "profesor" && actualProfesor != undefined){
+            console.log("ENTRE EN LA FUNCION PINGALL PROFESOR")
+            socket.emit("pingAll",{
+                xPositionProfesor: xPositionProfesor,
+                yPositionProfesor: yPositionProfesor,
+                actualProfesor: actualProfesor,
+                userId: actualUser[0]}
+                //Se lo mando como objeto
+            );
+        }
+    }, [xPositionProfesor, yPositionProfesor, userPlayer, actualProfesor]);
 
     useEffect(() => {
-        if(!socket)
-            return
-        
-        socket.on("pingAll", (data) => {
-            console.log(data);
-        })
-
-        
-    },[socket,isConnected])
-
-    /*useEffect(() => {
-        console.log("assasaa")
-        function pingAll() {
-            socket.emit("pingAll", {
-                xPositionProfesor: xPositionProfesor,
-                yPositionProfesor: yPositionProfesor
-                } //Se lo mando como objeto
-            );
-            console.log("assasaa")
+        if (socket && userPlayer === "student" && actualStudent != undefined){
+            console.log("ENTRE EN LA FUNCION PINGALL ALUMNO")
+            socket.emit("pingAll",{
+                xPositionStudent: xPositionStudent,
+                yPositionStudent: yPositionStudent,
+                actualStudent: actualStudent,
+                userId: actualUser[0]}
+            //Se lo mando como objeto
+        );
         }
+    }, [xPositionStudent, yPositionStudent, userPlayer, actualStudent, actualUser]);
 
-        pingAll();
-    },[xPositionProfesor,yPositionProfesor])*/
+    useEffect(() => {
+        console.log(listoAlumno, listoProfesor)
+        if (socket && listoAlumno === true && listoProfesor === true){
+            setListo(false)
+            socket.emit("pingListo", {
+                inicioPartida: true
+            })
+        }
+    }, [listoProfesor, listoAlumno]);
+  
+    //MARK: Socket
+    const { socket, isConnected } = useSocket();
+    
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on("pingAll", (data) => {
+            if (data.message.userId != actualUser[0] && userPlayer === "profesor"){
+                setXStudent(data.message.xPositionStudent)
+                setYStudent(data.message.yPositionStudent)
+            } else if (data.message.userId != actualUser[0] && userPlayer === "student"){
+                setXProfesor(data.message.xPositionProfesor)
+                setYProfesor(data.message.yPositionProfesor)
+            }
+        });
+
+        socket.on("pingPlayer", (data) => {
+            console.log(data)
+        });
+
+        socket.on("pingListo", (data) => {
+            if (userPlayer == "profesor") {
+                setActualStudent(data.info.actualStudent)
+                setListoAlumno(data.info.listoAlumno)
+            } else if (userPlayer == "student") {
+                console.log(data.info)
+                setActualProfesor(data.info.actualProfesor)
+                setListoProfesor(data.info.listoProfesor)
+            }
+        });
+
+        return () => {
+            socket.off("message")
+        }
+    }, [socket, isConnected, actualUser, userPlayer]);
+  
+    //MARK: Pagina
     return (
         <>
             {
@@ -485,7 +533,7 @@ export default function home() {
                 <>
                     <div className={styles.bodySelectPlayer}>
                         <div className={styles.selectPlayer}>
-                            <h2>¿Como vas a jugar?</h2>
+                            <h2>¿Cómo vas a jugar?</h2>
                             <div>
                                 <button onClick={funSelectProfesor}>Profesor</button>
                                 <button onClick={funSelectStudent}>Alumno</button>
@@ -551,12 +599,29 @@ export default function home() {
                 </>
             }
             {
-                actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false && selectMap == false &&
+                listo === true &&
+                <>
+                    <div className={styles.bodySelectProfesor}>
+                        <div className={styles.selectProfesor}>
+                            <h2>¿Estás listo?</h2>
+                            {
+                                ((listoProfesor === true && listoAlumno === false) || (listoProfesor === false && listoAlumno === true))  &&
+                                <p>Falta que alguno ponga listo</p>
+                            }
+                            <div className={styles.selectProfesorDiv}>
+                                <button onClick={funListo}>Listo</button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            }
+            {
+                actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false && selectMap == false && listo == false &&
                 <>
                     <div style={{backgroundImage: `url('/${mapas[mapaSeleccionado]}.jpg')`}} className={styles.body}>
                         <div className={styles.topbar}>
                             <p className={styles.pheader}>{contactName}</p>
-                            <Button_theme onClick={modoOscuro} />
+                            <Button_theme />
                             <div>
                                 <h1>Contador: {formatTime(seconds)}</h1>
                                 {seconds === 0 && <h2>¡Tiempo terminado!</h2>}
@@ -592,6 +657,7 @@ export default function home() {
                     </div>
                 </>
             }
+            <button onClick={logOut}>Log out</button>
         </>
     )
 }
