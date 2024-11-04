@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useSocket } from "@/hooks/useSocket";
 import styles from "./page.module.css";
 import Mapa from "@/components/Mapa";
+import Title from "@/components/Title";
 
 export default function home() {
     const [theme, setTheme] = useState("light");
@@ -122,7 +123,7 @@ export default function home() {
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }])
     const [alumnos, setAlumnos] = useState([{ name: "Maraval", description: "Pelado insoportable." }, { name: "Lujan", description: "Experta en quejas" }, { name: "Tomi", description: "Pollera" }, { name: "Cachete", description: "Traga" }, { name: "Mica", description: "Gimnasta" }, { name: "May", description: "Gei" }, { name: "Candela", description: "Ex comu" }, { name: "Lucas", description: "Judio" }, { name: "Juan", description: "Golpeado" }, { name: "Agus", description: "El primo" }, { name: "Tomi Beli", description: "Anti Pala" }])
-    const [mapas, setMapas] =useState (["sale1", "sale2", "sale3"])
+    const [mapas, setMapas] =useState (["Fondo cancha", "Fondo espacio", "Fondo Maria", "Fondo montaña", "Fondo playa", "Fondo selva"])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
     const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(0)
     const [mapaSeleccionado, setMapaSeleccionado] = useState (0)
@@ -469,7 +470,7 @@ export default function home() {
             })
         }
     }, [listoProfesor, listoAlumno]);
-
+  
     //MARK: Socket
     const { socket, isConnected } = useSocket();
     
@@ -505,7 +506,7 @@ export default function home() {
             socket.off("message")
         }
     }, [socket, isConnected, actualUser, userPlayer]);
-
+  
     //MARK: Pagina
     return (
         <>
@@ -515,12 +516,12 @@ export default function home() {
                     <div className={styles.bodyLogin}>
                         <div className={styles.login}>
                             <h2>Login</h2>
-                            <h3>User</h3>
+                            <h3>Usuario</h3>
                             <InputLogin type={"text"} placeholder={"Ingrese su usuario"} onChange={handleUsernameChange} value={username} />
-                            <h3>Password</h3>
+                            <h3>Contraseña</h3>
                             <InputLogin type={"password"} placeholder={"Ingrese su contraseña"} onChange={handlePasswordChange} value={password} />
                             <div>
-                                <button onClick={login}>Login</button>
+                                <button onClick={login}>Ingresar</button>
                                 <button onClick={register}>Registrarse</button>
                             </div>
                         </div>
@@ -544,21 +545,28 @@ export default function home() {
             {
                 selectProfesor === true &&
                 <>
-                    <div className={styles.bodySelectProfesor}>
-                        <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
-                        <div className={styles.selectProfesor}>
-                            <Profesor name={profesores[profesorSeleccionado].name} description={profesores[profesorSeleccionado].description} />
-                            <div className={styles.selectProfesorDiv}>
-                                <button onClick={changeSelectProfesor}>Listo</button>
+                <div className={styles.bodyPersonaje}>
+                    <Title className={styles.title} titulo="Elegí tu personaje"/>
+
+                        <div className={styles.bodySelectProfesor}>
+                            <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
+                            <div className={styles.selectProfesor}>
+                                <Profesor name={profesores[profesorSeleccionado].name} description={profesores[profesorSeleccionado].description} />
+                                <div className={styles.selectProfesorDiv}>
+                                    <button onClick={changeSelectProfesor}>Listo</button>
+                                </div>
                             </div>
+                            <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                         </div>
-                        <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
-                    </div>
+
+                </div>
                 </>
             }
             {
                 selectStudent === true &&
                 <>
+                <div className={styles.bodyPersonaje}>
+                    <Title className={styles.title} titulo="Elegí tu personaje"/>
                     <div className={styles.bodySelectProfesor}>
                         <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
@@ -569,11 +577,14 @@ export default function home() {
                         </div>
                         <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                     </div>
+                </div>    
                 </>
             }
             {
                 selectMap === true &&
                 <>
+                <div className={styles.bodyPersonaje}>
+                    <Title className={styles.title} titulo="Elegí el mapa"/>
                     <div className={styles.bodySelectProfesor}>
                         <button onClick={handleLeft}><img src="/../../atras.png" height={"80px"} /></button>
                         <div className={styles.selectProfesor}>
@@ -584,6 +595,7 @@ export default function home() {
                         </div>
                         <button onClick={handleRight}><img src="/../../adelante.png" height={"80px"} /></button>
                     </div>
+                </div>    
                 </>
             }
             {
