@@ -201,7 +201,7 @@ export default function home() {
                     setYProfesor(yPositionProfesor - 5)
                 }
             } else if (player == "student") {
-                if (yPositionStudent + 5 < altoPantalla - 90) {
+                if (yPositionStudent + 5 < 100) {
                     setYStudent(yPositionStudent + 5)
                 }
             }
@@ -212,14 +212,14 @@ export default function home() {
                     setXProfesor(xPositionProfesor - 5)
                 }
             } else if (player == "student") {
-                if (xPositionStudent + 5 < anchoPantalla - 90) {
+                if (xPositionStudent + 5 < 100) {
                     setXStudent(xPositionStudent + 5)
                 }
             }
         }
         if (keyState['S'] || keyState['s']) {
             if (player == "profesor") {
-                if (yPositionProfesor + 5 < altoPantalla - 90) {
+                if (yPositionProfesor + 5 < 100) {
                     setYProfesor(yPositionProfesor + 5)
                 }
             } else if (player == "student") {
@@ -230,7 +230,7 @@ export default function home() {
         }
         if (keyState['D'] || keyState['d']) {
             if (player == "profesor") {
-                if (xPositionProfesor + 5 < anchoPantalla - 90) {
+                if (xPositionProfesor + 5 < 100) {
                     setXProfesor(xPositionProfesor + 5)
                 }
             } else if (player == "student") {
@@ -468,6 +468,7 @@ export default function home() {
             socket.emit("pingListo", {
                 inicioPartida: true
             })
+            console.log("HOLAAAAAAAAAAAAAAAAAAA")
         }
     }, [listoProfesor, listoAlumno]);
   
@@ -629,11 +630,11 @@ export default function home() {
                         </div>
                         {
                             actualProfesor != undefined &&
-                            <img style={{ left: `${xPositionProfesor}px`, top: `${yPositionProfesor}px`, background: "#F00000"}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
+                            <img style={{ left: `${xPositionProfesor}%`, top: `${yPositionProfesor}%`, background: "#F00000"}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
                         }
                         {
                             actualStudent != undefined &&
-                            <img style={{right: `${xPositionStudent}px`, bottom: `${yPositionStudent}px`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
+                            <img style={{right: `${xPositionStudent}%`, bottom: `${yPositionStudent}%`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
                         }
                         <div className={styles.chat} id="chat">
                             

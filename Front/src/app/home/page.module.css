@@ -255,8 +255,8 @@
 }
 
 .profesor {
-  width: 90px;
-  height: 90px;
+  width: 5vw;
+  height: 12.5vh;
   position: absolute;
   left: 10px;
   top: 5px;
@@ -313,7 +313,7 @@
 }
 
 .alumno {
-  width: max-content;
+  width: 5vw;
   height: 12.5vh;
   position: absolute;
   right: 10px;
