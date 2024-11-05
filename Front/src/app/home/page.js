@@ -468,7 +468,6 @@ export default function home() {
             socket.emit("pingListo", {
                 inicioPartida: true
             })
-            console.log(true)
         }
     }, [listoProfesor, listoAlumno]);
   
@@ -630,27 +629,14 @@ export default function home() {
                         </div>
                         {
                             actualProfesor != undefined &&
-                            <img style={{ left: `${xPositionProfesor}vw`, top: `${yPositionProfesor}vh`, background: "#F00000"}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
+                            <img style={{ left: `${xPositionProfesor}px`, top: `${yPositionProfesor}px`, background: "#F00000"}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
                         }
                         {
                             actualStudent != undefined &&
-                            <img style={{right: `${xPositionStudent}vw`, bottom: `${yPositionStudent}vh`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
+                            <img style={{right: `${xPositionStudent}px`, bottom: `${yPositionStudent}px`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
                         }
                         <div className={styles.chat} id="chat">
-                            {/* {chats.map(chat => (
-                                chat.messages.length > 0 && chat.chatId === actualChat ? (
-                                    chat.messages.map((msg) => {
-                                        if (msg.userId === actualUser[0]) {
-                                            user = "user"
-                                        } else {
-                                            user = "other"
-                                        }
-                                        return <Message variant={user} theme={theme} message={msg.message} name={msg.username}/>
-                                    })
-                                ) : (
-                                    <></>
-                                )
-                            ))} */}
+                            
                         </div>
                         <div className={styles.bottombar}>
                             <h2>Promedio: {actualUser[1]}</h2>

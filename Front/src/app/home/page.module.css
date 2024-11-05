@@ -313,8 +313,8 @@
 }
 
 .alumno {
-  width: 90px;
-  height: 90px;
+  width: max-content;
+  height: 12.5vh;
   position: absolute;
   right: 10px;
   bottom: 5px;
