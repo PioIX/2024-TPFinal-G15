@@ -134,8 +134,8 @@ export default function home() {
     const [userPlayer, setUserPlayer] = useState("")
     const [selectMap, setSelectMap]= useState (false)
 
-    const [xPositionProfesor, setXProfesor] = useState(10);
-    const [xPositionStudent, setXStudent] = useState(10);
+    const [xPositionProfesor, setXProfesor] = useState(4);
+    const [xPositionStudent, setXStudent] = useState(4);
     const [yPositionProfesor, setYProfesor] = useState(5);
     const [yPositionStudent, setYStudent] = useState(5);
     const [listo, setListo] = useState(false)
@@ -174,8 +174,8 @@ export default function home() {
         };
     }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado, selectMap, mapaSeleccionado]);
 
-    const altoPantalla = window.innerHeight
-    const anchoPantalla = window.outerWidth
+    // const altoPantalla = window.innerHeight
+    // const anchoPantalla = window.outerWidth
 
     const [keyState, setKeyState] = useState({});
 
@@ -197,45 +197,49 @@ export default function home() {
         //console.log("ENTRE AL EVENTO", event.key); // Para depurar
         if (keyState['W'] || keyState['w']) {
             if (player == "profesor") {
-                if (yPositionProfesor - 5 > 0) {
-                    setYProfesor(yPositionProfesor - 5)
+                if (yPositionProfesor - 2 >= 0) {
+                    setYProfesor(yPositionProfesor - 2)
+                } else if (yPositionProfesor - 1 >= 0){
+                    setYProfesor(yPositionProfesor - 1)
                 }
             } else if (player == "student") {
-                if (yPositionStudent + 5 < 100) {
-                    setYStudent(yPositionStudent + 5)
+                if (yPositionStudent + 2 < 100 - 11) {
+                    setYStudent(yPositionStudent + 2)
                 }
             }
         }
         if (keyState['A'] || keyState['a']){
             if (player == "profesor") {
-                if (xPositionProfesor - 5 > 0) {
-                    setXProfesor(xPositionProfesor - 5)
+                if (xPositionProfesor - 1 >= 0) {
+                    setXProfesor(xPositionProfesor - 1)
                 }
             } else if (player == "student") {
-                if (xPositionStudent + 5 < 100) {
-                    setXStudent(xPositionStudent + 5)
+                if (xPositionStudent + 1 < 100 - 4) {
+                    setXStudent(xPositionStudent + 1)
                 }
             }
         }
         if (keyState['S'] || keyState['s']) {
             if (player == "profesor") {
-                if (yPositionProfesor + 5 < 100) {
-                    setYProfesor(yPositionProfesor + 5)
+                if (yPositionProfesor + 2 < 100 - 11) {
+                    setYProfesor(yPositionProfesor + 2)
                 }
             } else if (player == "student") {
-                if (yPositionStudent - 5 > 0) {
-                    setYStudent(yPositionStudent - 5)
+                if (yPositionStudent - 2 >= 0) {
+                    setYStudent(yPositionStudent - 2)
+                } else if (yPositionStudent - 1 >= 0){
+                    setYStudent(yPositionStudent - 1)
                 }
             }
         }
         if (keyState['D'] || keyState['d']) {
             if (player == "profesor") {
-                if (xPositionProfesor + 5 < 100) {
-                    setXProfesor(xPositionProfesor + 5)
+                if (xPositionProfesor + 1 < 100 - 4) {
+                    setXProfesor(xPositionProfesor + 1)
                 }
             } else if (player == "student") {
-                if (xPositionStudent - 5 > 0) {
-                    setXStudent(xPositionStudent - 5)
+                if (xPositionStudent - 1 >= 0) {
+                    setXStudent(xPositionStudent - 1)
                 }
             }
         }
@@ -308,6 +312,9 @@ export default function home() {
 
     function changeSelectProfesor() {
         setActualProfesor(profesores[profesorSeleccionado])
+        socket.emit("pingPlayer",{
+            actualProfesor: profesores[profesorSeleccionado],
+            userId: actualUser[0]})
         setSelectProfesor(false)
         setProfesorSeleccionado(0)
         setSelectMap(true)
@@ -315,6 +322,9 @@ export default function home() {
 
     function changeSelectStudent() {
         setActualStudent(alumnos[alumnoSeleccionado])
+        socket.emit("pingPlayer",{
+            actualStudent: alumnos[alumnoSeleccionado],
+            userId: actualUser[0]})
         setSelectStudent(false)
         setAlumnoSeleccionado(0)
         setSelectMap(true)
@@ -441,7 +451,6 @@ export default function home() {
             socket.emit("pingAll",{
                 xPositionProfesor: xPositionProfesor,
                 yPositionProfesor: yPositionProfesor,
-                actualProfesor: actualProfesor,
                 userId: actualUser[0]}
                 //Se lo mando como objeto
             );
@@ -454,7 +463,6 @@ export default function home() {
             socket.emit("pingAll",{
                 xPositionStudent: xPositionStudent,
                 yPositionStudent: yPositionStudent,
-                actualStudent: actualStudent,
                 userId: actualUser[0]}
             //Se lo mando como objeto
         );
@@ -465,7 +473,7 @@ export default function home() {
         console.log(listoAlumno, listoProfesor)
         if (socket && listoAlumno === true && listoProfesor === true){
             setListo(false)
-            socket.emit("pingListo", {
+            socket.emit("pingPartidaIniciada", {
                 inicioPartida: true
             })
             console.log("HOLAAAAAAAAAAAAAAAAAAA")

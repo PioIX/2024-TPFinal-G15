@@ -134,14 +134,6 @@ io.on("connection", (socket) => {
 
 	socket.on('pingAll', data => {
 		console.log("PING ALL: ", data);
-		if (data.actualProfesor){
-			datosUsuarios.actualProfesor = data.actualProfesor
-			console.log(datosUsuarios)
-		}
-		if (data.actualStudent){
-			datosUsuarios.actualStudent = data.actualStudent
-			console.log(datosUsuarios)
-		}
 		io.emit('pingAll', { event: "Ping to all", message: data });
 	});
 
@@ -178,6 +170,18 @@ io.on("connection", (socket) => {
 			}
 			io.emit('pingListo', { event: "Ping to listo", info: datosUsuarios });
 		}
+	});
+
+	socket.on('pingPartidaIniciada', data => {
+		console.log("PING PARTIDA INICIADA: ", data);
+		if (data != undefined){
+			datosUsuarios.actualProfesor = ""
+			datosUsuarios.actualStudent = ""
+			datosUsuarios.listoProfesor = false
+			datosUsuarios.listoAlumno = false
+		}
+		io.emit('pingPartidaIniciada', { event: "Ping to partida iniciada", info: datosUsuarios });
+		console.log(datosUsuarios)
 	});
 
 	socket.on('disconnect', () => {
