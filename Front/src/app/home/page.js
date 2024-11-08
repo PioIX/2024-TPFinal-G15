@@ -1,8 +1,6 @@
 "use client"
-import Message from "@/components/Message";
 import Button_theme from "@/components/Button_theme";
 import InputLogin from "@/components/InputLogin";
-import InputNC from "@/components/InputNC";
 import Profesor from "@/components/Profesor";
 import { useEffect, useState } from "react";
 import { useSocket } from "@/hooks/useSocket";
@@ -11,17 +9,10 @@ import Mapa from "@/components/Mapa";
 import Title from "@/components/Title";
 
 export default function home() {
-    const [theme, setTheme] = useState("light");
-    const [contactName, setContactName] = useState("Nombre Usuario");
-    const [actualChat, setActualChat] = useState(null);
-    const [message, setMessage] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [actualUser, setActualUser] = useState([]);
     const [selectProfesor, setSelectProfesor] = useState(false);
-
-
-    let user = ""
 
     async function register() {
         if (username != undefined && username != "" && password != undefined && password != "") {
@@ -195,19 +186,43 @@ export default function home() {
 
     const handleMovement = (player) => {
         //console.log("ENTRE AL EVENTO", event.key); // Para depurar
+        // if (keyState['W'] || keyState['w']) {
+        //     if (player == "profesor") {
+        //         if((xPositionProfesor < 19 || xPositionProfesor > 45 || yPositionProfesor === 25)){
+        //             if (yPositionProfesor - 2 >= 0) {
+        //                 setYProfesor(yPositionProfesor - 2)
+        //             } else if (yPositionProfesor - 1 >= 0){
+        //                 setYProfesor(yPositionProfesor - 1)
+        //             }
+        //         }
+        //     } else if (player == "student") {
+        //         if (yPositionStudent + 2 < 100 - 11) {
+        //             setYStudent(yPositionStudent + 2)
+        //         }
+        //     }
+        // }
+
+        // Condición para definir si el profesor está fuera de la primera pared
+        const fueraPrimeraPared = (xPositionProfesor < 19 || xPositionProfesor > 49) || (yPositionProfesor < 22 || yPositionProfesor > 26);
+        // Condición para definir si el profesor está fuera de la segunda pared
+        const fueraSegundaPared = (xPositionProfesor < 22 || xPositionProfesor > 53) || (yPositionProfesor < 72 || yPositionProfesor > 76);
         if (keyState['W'] || keyState['w']) {
-            if (player == "profesor") {
-                if (yPositionProfesor - 2 >= 0) {
-                    setYProfesor(yPositionProfesor - 2)
-                } else if (yPositionProfesor - 1 >= 0){
-                    setYProfesor(yPositionProfesor - 1)
+            if (player === "profesor") {
+                // Verifica si el personaje está fuera de los límites de la pared en X o Y para permitir el movimiento
+                if (fueraPrimeraPared && fueraSegundaPared) {
+                    if (yPositionProfesor - 2 >= 0) {
+                        setYProfesor(yPositionProfesor - 2);
+                    } else if (yPositionProfesor - 1 >= 0) {
+                        setYProfesor(yPositionProfesor - 1);
+                    }
                 }
             } else if (player == "student") {
                 if (yPositionStudent + 2 < 100 - 11) {
-                    setYStudent(yPositionStudent + 2)
+                    setYStudent(yPositionStudent + 2);
                 }
             }
         }
+        
         if (keyState['A'] || keyState['a']){
             if (player == "profesor") {
                 if (xPositionProfesor - 1 >= 0) {
@@ -629,8 +644,6 @@ export default function home() {
                 <>
                     <div style={{backgroundImage: `url('/${mapas[mapaSeleccionado]}.jpg')`}} className={styles.body}>
                         <div className={styles.topbar}>
-                            <p className={styles.pheader}>{contactName}</p>
-                            <Button_theme />
                             <div>
                                 <h1>Contador: {formatTime(seconds)}</h1>
                                 {seconds === 0 && <h2>¡Tiempo terminado!</h2>}
