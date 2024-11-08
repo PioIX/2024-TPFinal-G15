@@ -204,8 +204,8 @@ export default function home() {
 
         // Condición para definir si el profesor está fuera de la primera pared
         const fueraPrimeraPared = (xPositionProfesor < 19 || xPositionProfesor > 49) || (yPositionProfesor < 22 || yPositionProfesor > 26);
-        // Condición para definir si el profesor está fuera de la segunda pared
-        const fueraSegundaPared = (xPositionProfesor < 22 || xPositionProfesor > 53) || (yPositionProfesor < 72 || yPositionProfesor > 76);
+        const fueraSegundaPared = (xPositionProfesor < 21 || xPositionProfesor > 53) || (yPositionProfesor < 72 || yPositionProfesor > 76);
+
         if (keyState['W'] || keyState['w']) {
             if (player === "profesor") {
                 // Verifica si el personaje está fuera de los límites de la pared en X o Y para permitir el movimiento
