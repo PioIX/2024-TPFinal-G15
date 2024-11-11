@@ -204,12 +204,16 @@ export default function home() {
 
         // Condición para definir si el profesor está fuera de la primera pared
         const fueraPrimeraPared = (xPositionProfesor < 19 || xPositionProfesor > 49) || (yPositionProfesor < 22 || yPositionProfesor > 26);
+        const fueraPrimeraPared2 = (xPositionProfesor < 14 || xPositionProfesor > 49) || (yPositionProfesor < 11 || yPositionProfesor > 13);
+        const fueraTerceraPared = (xPositionProfesor < 55 || xPositionProfesor > 78) || (yPositionProfesor < 22 || yPositionProfesor > 26);
+        const fueraTerceraPared2 = (xPositionProfesor < 55 || xPositionProfesor > 82) || (yPositionProfesor < 11 || yPositionProfesor > 13);
         const fueraSegundaPared = (xPositionProfesor < 21 || xPositionProfesor > 53) || (yPositionProfesor < 72 || yPositionProfesor > 76);
+        const fueraSegundaPared2 = (xPositionProfesor < 21 || xPositionProfesor > 53) || (yPositionProfesor < 62 || yPositionProfesor > 64);
 
         if (keyState['W'] || keyState['w']) {
             if (player === "profesor") {
                 // Verifica si el personaje está fuera de los límites de la pared en X o Y para permitir el movimiento
-                if (fueraPrimeraPared && fueraSegundaPared) {
+                if (fueraPrimeraPared && fueraSegundaPared && fueraTerceraPared) {
                     if (yPositionProfesor - 2 >= 0) {
                         setYProfesor(yPositionProfesor - 2);
                     } else if (yPositionProfesor - 1 >= 0) {
@@ -236,8 +240,10 @@ export default function home() {
         }
         if (keyState['S'] || keyState['s']) {
             if (player == "profesor") {
-                if (yPositionProfesor + 2 < 100 - 11) {
-                    setYProfesor(yPositionProfesor + 2)
+                if (fueraPrimeraPared2 && fueraSegundaPared2 && fueraTerceraPared2){
+                    if (yPositionProfesor + 2 < 100 - 11) {
+                        setYProfesor(yPositionProfesor + 2)
+                    }
                 }
             } else if (player == "student") {
                 if (yPositionStudent - 2 >= 0) {
@@ -491,7 +497,6 @@ export default function home() {
             socket.emit("pingPartidaIniciada", {
                 inicioPartida: true
             })
-            console.log("HOLAAAAAAAAAAAAAAAAAAA")
         }
     }, [listoProfesor, listoAlumno]);
   
