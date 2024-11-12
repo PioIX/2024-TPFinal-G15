@@ -126,9 +126,9 @@ export default function home() {
     const [selectMap, setSelectMap]= useState (false)
 
     const [xPositionProfesor, setXProfesor] = useState(4);
-    const [xPositionStudent, setXStudent] = useState(4);
+    const [xPositionStudent, setXStudent] = useState(92);
     const [yPositionProfesor, setYProfesor] = useState(5);
-    const [yPositionStudent, setYStudent] = useState(5);
+    const [yPositionStudent, setYStudent] = useState(84);
     const [listo, setListo] = useState(false)
     const [listoProfesor, setListoProfesor] = useState(false);
     const [listoAlumno, setListoAlumno] = useState(false);
@@ -203,17 +203,30 @@ export default function home() {
         // }
 
         // Condición para definir si el profesor está fuera de la primera pared
-        const fueraPrimeraPared = (xPositionProfesor < 19 || xPositionProfesor > 49) || (yPositionProfesor < 22 || yPositionProfesor > 26);
-        const fueraPrimeraPared2 = (xPositionProfesor < 14 || xPositionProfesor > 49) || (yPositionProfesor < 11 || yPositionProfesor > 13);
-        const fueraTerceraPared = (xPositionProfesor < 55 || xPositionProfesor > 78) || (yPositionProfesor < 22 || yPositionProfesor > 26);
-        const fueraTerceraPared2 = (xPositionProfesor < 55 || xPositionProfesor > 82) || (yPositionProfesor < 11 || yPositionProfesor > 13);
-        const fueraSegundaPared = (xPositionProfesor < 21 || xPositionProfesor > 53) || (yPositionProfesor < 72 || yPositionProfesor > 76);
-        const fueraSegundaPared2 = (xPositionProfesor < 21 || xPositionProfesor > 53) || (yPositionProfesor < 62 || yPositionProfesor > 64);
+
+        function pared(xpos, ypos, dir){
+            const paredes = [
+                {xmin: 19, xmax: 49, ymin: 22, ymax: 26, dir: "arriba"},
+                {xmin: 14, xmax: 49, ymin: 11, ymax: 13, dir: "abajo"},
+                {xmin: 56, xmax: 78, ymin: 22, ymax: 26, dir: "arriba"},
+                {xmin: 56, xmax: 82, ymin: 11, ymax: 13, dir: "abajo"},
+                {xmin: 23, xmax: 53, ymin: 72, ymax: 76, dir: "arriba"},
+                {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo"}
+            ]
+            for (let x in paredes){
+                console.log(x)
+                if (((xpos < paredes[x].xmin || xpos > paredes[x].xmax) || (ypos < paredes[x].ymin || ypos > paredes[x].ymax)) === false && paredes[x].dir === dir){
+                    console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                    return ((xpos < paredes[x].xmin || xpos > paredes[x].xmax) || (ypos < paredes[x].ymin || ypos > paredes[x].ymax))
+                }
+            }
+            return true
+        }
 
         if (keyState['W'] || keyState['w']) {
             if (player === "profesor") {
                 // Verifica si el personaje está fuera de los límites de la pared en X o Y para permitir el movimiento
-                if (fueraPrimeraPared && fueraSegundaPared && fueraTerceraPared) {
+                if (pared(xPositionProfesor, yPositionProfesor, "arriba")) {
                     if (yPositionProfesor - 2 >= 0) {
                         setYProfesor(yPositionProfesor - 2);
                     } else if (yPositionProfesor - 1 >= 0) {
@@ -221,8 +234,12 @@ export default function home() {
                     }
                 }
             } else if (player == "student") {
-                if (yPositionStudent + 2 < 100 - 11) {
-                    setYStudent(yPositionStudent + 2);
+                if (pared(xPositionStudent, yPositionStudent, "arriba")){
+                    if (yPositionStudent - 2 >= 0 ) {
+                        setYStudent(yPositionStudent - 2);
+                    } else if (yPositionStudent - 1 >= 0) {
+                        setYStudent(yPositionStudent - 1)
+                    }
                 }
             }
         }
@@ -233,23 +250,27 @@ export default function home() {
                     setXProfesor(xPositionProfesor - 1)
                 }
             } else if (player == "student") {
-                if (xPositionStudent + 1 < 100 - 4) {
-                    setXStudent(xPositionStudent + 1)
+                if (xPositionStudent - 1 >= 0) {
+                    setXStudent(xPositionStudent - 1)
                 }
             }
         }
         if (keyState['S'] || keyState['s']) {
             if (player == "profesor") {
-                if (fueraPrimeraPared2 && fueraSegundaPared2 && fueraTerceraPared2){
+                if (pared(xPositionProfesor, yPositionProfesor, "abajo")){
                     if (yPositionProfesor + 2 < 100 - 11) {
                         setYProfesor(yPositionProfesor + 2)
+                    } else if (yPositionProfesor + 1 < 100 - 11){
+                        setYProfesor(yPositionProfesor + 1)
                     }
                 }
             } else if (player == "student") {
-                if (yPositionStudent - 2 >= 0) {
-                    setYStudent(yPositionStudent - 2)
-                } else if (yPositionStudent - 1 >= 0){
-                    setYStudent(yPositionStudent - 1)
+                if (pared(xPositionStudent, yPositionStudent, "abajo")) {
+                    if (yPositionStudent + 2 < 100 - 11) {
+                        setYStudent(yPositionStudent + 2)
+                    } else if (yPositionStudent + 1 < 100 - 11){
+                        setYStudent(yPositionStudent + 1)
+                    }
                 }
             }
         }
@@ -259,8 +280,8 @@ export default function home() {
                     setXProfesor(xPositionProfesor + 1)
                 }
             } else if (player == "student") {
-                if (xPositionStudent - 1 >= 0) {
-                    setXStudent(xPositionStudent - 1)
+                if (xPositionStudent + 1 < 100 - 4) {
+                    setXStudent(xPositionStudent + 1)
                 }
             }
         }
@@ -660,7 +681,7 @@ export default function home() {
                         }
                         {
                             actualStudent != undefined &&
-                            <img style={{right: `${xPositionStudent}%`, bottom: `${yPositionStudent}%`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
+                            <img style={{ left: `${xPositionStudent}%`, top: `${yPositionStudent}%`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
                         }
                         <div className={styles.chat} id="chat">
                             

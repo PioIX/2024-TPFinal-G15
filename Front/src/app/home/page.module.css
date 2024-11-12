@@ -316,8 +316,8 @@
   width: 5vw;
   height: 12.5vh;
   position: absolute;
-  right: 10px;
-  bottom: 5px;
+  left: 96%;
+  top: 89%;
 }
 
 .textosLogin {
