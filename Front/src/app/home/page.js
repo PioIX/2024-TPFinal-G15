@@ -214,7 +214,7 @@ export default function home() {
                 {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo"},
                 {xmin: 64, xmax: 82, ymin: 72, ymax: 76, dir: "arriba"},
                 {xmin: 64, xmax: 82, ymin: 62, ymax: 64, dir: "abajo"},
-                {xmin: 19, xmax: 49, ymin: 22, ymax: 26, dir: "arriba"},
+                {xmin: 19, xmax: 49, ymin: 0, ymax: 100, dir: "izquierda"},
             ]
             for (let x in paredes){
                 console.log(x)
@@ -249,12 +249,16 @@ export default function home() {
         
         if (keyState['A'] || keyState['a']){
             if (player == "profesor") {
-                if (xPositionProfesor - 1 >= 0) {
-                    setXProfesor(xPositionProfesor - 1)
+                if (pared(xPositionProfesor, yPositionProfesor, "izquierda")){
+                    if (xPositionProfesor - 1 >= 0) {
+                        setXProfesor(xPositionProfesor - 1)
+                    }
                 }
             } else if (player == "student") {
-                if (xPositionStudent - 1 >= 0) {
-                    setXStudent(xPositionStudent - 1)
+                if (pared(xPositionProfesor, yPositionProfesor, "izquierda")){
+                    if (xPositionStudent - 1 >= 0) {
+                        setXStudent(xPositionStudent - 1)
+                    }
                 }
             }
         }
@@ -279,12 +283,16 @@ export default function home() {
         }
         if (keyState['D'] || keyState['d']) {
             if (player == "profesor") {
-                if (xPositionProfesor + 1 < 100 - 4) {
+                if (pared(xPositionProfesor, yPositionProfesor, "derecha")){
+                    if (xPositionProfesor + 1 < 100 - 4) {
                     setXProfesor(xPositionProfesor + 1)
+                    }
                 }
             } else if (player == "student") {
-                if (xPositionStudent + 1 < 100 - 4) {
-                    setXStudent(xPositionStudent + 1)
+                if (pared(xPositionProfesor, yPositionProfesor, "derecha")){
+                    if (xPositionStudent + 1 < 100 - 4) {
+                        setXStudent(xPositionStudent + 1)
+                    }
                 }
             }
         }
