@@ -185,23 +185,6 @@ export default function home() {
     };
 
     const handleMovement = (player) => {
-        //console.log("ENTRE AL EVENTO", event.key); // Para depurar
-        // if (keyState['W'] || keyState['w']) {
-        //     if (player == "profesor") {
-        //         if((xPositionProfesor < 19 || xPositionProfesor > 45 || yPositionProfesor === 25)){
-        //             if (yPositionProfesor - 2 >= 0) {
-        //                 setYProfesor(yPositionProfesor - 2)
-        //             } else if (yPositionProfesor - 1 >= 0){
-        //                 setYProfesor(yPositionProfesor - 1)
-        //             }
-        //         }
-        //     } else if (player == "student") {
-        //         if (yPositionStudent + 2 < 100 - 11) {
-        //             setYStudent(yPositionStudent + 2)
-        //         }
-        //     }
-        // }
-
         // Condición para definir si el profesor está fuera de la primera pared
 
         function pared(xpos, ypos, dir){
@@ -216,7 +199,6 @@ export default function home() {
             for (let x in paredes){
                 console.log(x)
                 if (((xpos < paredes[x].xmin || xpos > paredes[x].xmax) || (ypos < paredes[x].ymin || ypos > paredes[x].ymax)) === false && paredes[x].dir === dir){
-                    console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                     return ((xpos < paredes[x].xmin || xpos > paredes[x].xmax) || (ypos < paredes[x].ymin || ypos > paredes[x].ymax))
                 }
             }
@@ -298,7 +280,11 @@ export default function home() {
     }, []);
 
     useEffect(() => {
-        handleMovement(userPlayer);
+        if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === true){
+            handleMovement(userPlayer);
+        } else {
+            alert("Atrapaste al alumno")
+        }
 
         console.log(keyState)
     }, [keyState, userPlayer]);
