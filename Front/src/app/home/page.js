@@ -283,16 +283,22 @@ export default function home() {
 
     useEffect(() => {
         if (game === true){
-            if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === true){
-                handleMovement(userPlayer);
-            } else {
-                alert("Atrapaste al alumno")
-                setGame(false)
-            }
-    
+            handleMovement(userPlayer);
+
             console.log(keyState)
         }
     }, [keyState, userPlayer, game]);
+
+    useEffect(() => {
+        if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === false){
+            if (userPlayer === "profesor"){
+                alert("Atrapaste al alumno")
+            } else {
+                alert("Te atraparon")
+            }
+            setGame(false)
+        }
+    }, [xPositionProfesor, yPositionProfesor, xPositionStudent, yPositionStudent])
 
     function handleRight() {
         if (selectProfesor == true) {
