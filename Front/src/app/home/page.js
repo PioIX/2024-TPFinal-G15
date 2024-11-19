@@ -211,7 +211,10 @@ export default function home() {
                 {xmin: 56, xmax: 78, ymin: 22, ymax: 26, dir: "arriba"},
                 {xmin: 56, xmax: 82, ymin: 11, ymax: 13, dir: "abajo"},
                 {xmin: 23, xmax: 53, ymin: 72, ymax: 76, dir: "arriba"},
-                {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo"}
+                {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo"},
+                {xmin: 64, xmax: 82, ymin: 72, ymax: 76, dir: "arriba"},
+                {xmin: 64, xmax: 82, ymin: 62, ymax: 64, dir: "abajo"},
+                {xmin: 19, xmax: 49, ymin: 22, ymax: 26, dir: "arriba"},
             ]
             for (let x in paredes){
                 console.log(x)
