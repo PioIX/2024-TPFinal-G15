@@ -214,7 +214,8 @@ export default function home() {
                 {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo"},
                 {xmin: 64, xmax: 82, ymin: 72, ymax: 76, dir: "arriba"},
                 {xmin: 64, xmax: 82, ymin: 62, ymax: 64, dir: "abajo"},
-                {xmin: 19, xmax: 49, ymin: 0, ymax: 100, dir: "izquierda"},
+                /*{xmin: 19, xmax: 49, ymin: 0, ymax: 100, dir: "izquierda"},
+                {xmin: 19, xmax: 49, ymin: 0, ymax: 100, dir: "derecha"},*/
             ]
             for (let x in paredes){
                 console.log(x)
@@ -255,7 +256,7 @@ export default function home() {
                     }
                 }
             } else if (player == "student") {
-                if (pared(xPositionProfesor, yPositionProfesor, "izquierda")){
+                if (pared(xPositionStudent, yPositionStudent, "izquierda")){
                     if (xPositionStudent - 1 >= 0) {
                         setXStudent(xPositionStudent - 1)
                     }
@@ -289,7 +290,7 @@ export default function home() {
                     }
                 }
             } else if (player == "student") {
-                if (pared(xPositionProfesor, yPositionProfesor, "derecha")){
+                if (pared(xPositionStudent, yPositionStudent, "derecha")){
                     if (xPositionStudent + 1 < 100 - 4) {
                         setXStudent(xPositionStudent + 1)
                     }
