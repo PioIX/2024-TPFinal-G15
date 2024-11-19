@@ -278,16 +278,21 @@ export default function home() {
             window.removeEventListener('keyup', handleKeyUp);
         };
     }, []);
+    
+    const [game, setGame] = useState(true)
 
     useEffect(() => {
-        if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === true){
-            handleMovement(userPlayer);
-        } else {
-            alert("Atrapaste al alumno")
+        if (game === true){
+            if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === true){
+                handleMovement(userPlayer);
+            } else {
+                alert("Atrapaste al alumno")
+                setGame(false)
+            }
+    
+            console.log(keyState)
         }
-
-        console.log(keyState)
-    }, [keyState, userPlayer]);
+    }, [keyState, userPlayer, game]);
 
     function handleRight() {
         if (selectProfesor == true) {
@@ -498,7 +503,6 @@ export default function home() {
     }, [xPositionStudent, yPositionStudent, userPlayer, actualStudent, actualUser]);
 
     useEffect(() => {
-        console.log(listoAlumno, listoProfesor)
         if (socket && listoAlumno === true && listoProfesor === true){
             setListo(false)
             socket.emit("pingPartidaIniciada", {
