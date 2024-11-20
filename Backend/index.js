@@ -98,6 +98,27 @@ app.post('/register', async function(req, res) {
 	console.log(result2)
 });
 
+app.get('/topScorers', async function(req,res) {
+	const result = await MySQL.realizarQuery(`SELECT puntos, username FROM Puntajes INNER JOIN Users ON usuario_id = userid ORDER BY puntos DESC LIMIT 3;`)
+	res.send({list: result});
+});
+
+app.post('/addScore', async function(req,res) {
+	const puntos = req.body.puntos;
+	const userId = req.body.userId;
+	const result = await MySQL.realizarQuery(`SELECT puntos, username FROM Puntajes INNER JOIN Users ON usuario_id = userid WHERE usuario_id = ${userId};`)
+	if (result === undefined || result.length === 0){
+		if (puntos > 0){
+			const result2 = await MySQL.realizarQuery(`INSERT INTO Puntajes (puntos, usuario_id) VALUES (${puntos}, ${userId})`)
+			return res.send({message: "Se ha agregado el puntaje correctamente"});
+		}
+	} else {
+		const suma = result[0].puntos + puntos
+		const result3 = await MySQL.realizarQuery(`UPDATE Puntajes SET puntos = ${suma} WHERE usuario_id = ${userId};`)
+		return res.send({message: "Se ha modificado el puntaje correctamente"});
+	}
+});
+
 app.get('/getPlayer', function(req,res) {
 	res.send(datosUsuarios);
 });

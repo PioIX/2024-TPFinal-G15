@@ -125,6 +125,7 @@ export default function home() {
     const [selectMap, setSelectMap] = useState (false)
     const [finalText, setFinalText] = useState("")
     const [playerPoints, setPlayerPoints] = useState(0)
+    const [listPlayers, setListPlayers] = useState([])
 
     const [xPositionProfesor, setXProfesor] = useState(4);
     const [xPositionStudent, setXStudent] = useState(92);
@@ -295,8 +296,12 @@ export default function home() {
         if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === false){
             if (userPlayer === "profesor"){
                 alert("Atrapaste al alumno")
+                topScorers(10)
+                setPlayerPoints(10)
             } else {
                 alert("Te atraparon")
+                topScorers(0)
+                setPlayerPoints(0)
             }
             setGame(false)
         }
@@ -467,6 +472,38 @@ export default function home() {
         const result = await response.json();
 
         console.log(result)
+    }
+
+    async function topScorers(points){
+        const data = {
+            puntos: points,
+            userId: actualUser[0]
+        }
+
+        const response = await fetch('http://localhost:4000/addScore', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta de la red');
+        const result = await response.json();
+
+        const response1 = await fetch('http://localhost:4000/topScorers', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response1.ok) throw new Error('Error en la respuesta de la red');
+        const result1 = await response1.json();
+
+        setListPlayers(result1.list)
     }
 
     //MARK: Contador
@@ -689,6 +726,11 @@ export default function home() {
                                         <h2>Partida terminada</h2>
                                         <h3>{finalText}</h3>
                                         <p>Obtuviste {playerPoints} puntos</p>
+                                        <ul>
+                                            {listPlayers.map((player) => {
+                                                return <li>{player.username}: {player.puntos} puntos</li>
+                                            })}
+                                        </ul>
                                     </div>
                                 </div>
                             </>
