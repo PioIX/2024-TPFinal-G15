@@ -1,12 +1,7 @@
 // Paquetes instalados: -g nodemon, express, body-parser, mysql2, socket.io
 // Agregado al archivo "package.json" la línea --> "start": "nodemon index"
 
-// Proyecto "Node_base"
-// Desarrollo de Aplicaciones Informáticas - Proyecto de Producción - 5to Informática
-
 // Docentes: Nicolás Facón, Matías Marchesi, Martín Rivas
-
-// Revisión 5 - Año 2024
 
 // Cargo librerías instaladas y necesarias
 const express = require('express');						// Para el manejo del web server
@@ -181,6 +176,7 @@ io.on("connection", (socket) => {
 				datosUsuarios.listoAlumno = data.listoAlumno
 				console.log(datosUsuarios)
 			}
+			io.emit('pingListo', { event: "Ping to listo", info: datosUsuarios });
 			if (data.inicioPartida){
 				console.log("inicio partida")
 				datosUsuarios.actualProfesor = ""
@@ -189,7 +185,6 @@ io.on("connection", (socket) => {
 				datosUsuarios.listoAlumno = false
 				return
 			}
-			io.emit('pingListo', { event: "Ping to listo", info: datosUsuarios });
 		}
 	});
 
@@ -203,6 +198,7 @@ io.on("connection", (socket) => {
 		}
 		io.emit('pingPartidaIniciada', { event: "Ping to partida iniciada", info: datosUsuarios });
 		console.log(datosUsuarios)
+		console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 	});
 
 	socket.on('disconnect', () => {

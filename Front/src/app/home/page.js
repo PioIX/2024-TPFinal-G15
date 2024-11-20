@@ -98,7 +98,39 @@ export default function home() {
     }
 
     function closeSession() {
+        setGame(true)
+        setXProfesor(4)
+        setYProfesor(5)
+        setXStudent(92)
+        setYStudent(84)
+        setContador(false)
+        setListoProfesor(false)
+        setListoAlumno(false)
         setActualUser([])
+        setUserPlayer("")
+        setMapaSeleccionado(0)
+        setSeconds(180)
+        setPlaying(false)
+        setActualStudent()
+        setActualProfesor()
+    }
+
+    function startAgain() {
+        setXProfesor(4)
+        setYProfesor(5)
+        setXStudent(92)
+        setYStudent(84)
+        setGame(true)
+        setSelectPlayer(true)
+        setContador(false)
+        setListoProfesor(false)
+        setListoAlumno(false)
+        setUserPlayer("")
+        setMapaSeleccionado(0)
+        setSeconds(180)
+        setPlaying(false)
+        setActualStudent()
+        setActualProfesor()
     }
 
     const handleUsernameChange = (e) => {
@@ -134,6 +166,10 @@ export default function home() {
     const [listo, setListo] = useState(false)
     const [listoProfesor, setListoProfesor] = useState(false);
     const [listoAlumno, setListoAlumno] = useState(false);
+
+    const [keyState, setKeyState] = useState({});
+    const [game, setGame] = useState(true);
+    const [playing, setPlaying] = useState(false)
     
     function handleContador() {
         setContador(true)
@@ -167,8 +203,6 @@ export default function home() {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado, selectMap, mapaSeleccionado]);
-
-    const [keyState, setKeyState] = useState({});
 
     const handleKeyDown1 = (event) => {
         setKeyState((prev) => ({
@@ -279,7 +313,7 @@ export default function home() {
         };
     }, []);
     
-    const [game, setGame] = useState(true)
+    
 
     useEffect(() => {
         if (game === true){
@@ -288,23 +322,6 @@ export default function home() {
             console.log(keyState)
         }
     }, [keyState, userPlayer, game]);
-
-    useEffect(() => {
-        if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === false){
-            if (userPlayer === "profesor"){
-                addScore(10)
-                alert("Atrapaste al alumno")
-                setPlayerPoints(10)
-                setFinalText("Ganaste")
-            } else {
-                alert("Te atraparon")
-                setPlayerPoints(0)
-                setFinalText("Perdiste")
-                addScore(0)
-            }
-            setGame(false)
-        }
-    }, [xPositionProfesor, yPositionProfesor, xPositionStudent, yPositionStudent])
 
     function handleRight() {
         if (selectProfesor == true) {
@@ -340,7 +357,6 @@ export default function home() {
             }
         } 
         else if (selectMap == true) {
-            console.log(mapaSeleccionado)
             if (mapaSeleccionado > 0) {
                 setMapaSeleccionado(mapaSeleccionado - 1)
             } else {
@@ -429,18 +445,18 @@ export default function home() {
 
     function funListo(){
         if (userPlayer === "profesor"){
-            setListoProfesor(true)
             socket.emit("pingListo", {
                 userId: actualUser[0],
                 listoProfesor: true
             })
+            setListoProfesor(true)
         }
         if (userPlayer === "student"){
-            setListoAlumno(true)
             socket.emit("pingListo", {
                 userId: actualUser[0],
                 listoAlumno: true
             })
+            setListoAlumno(true)
         }
     }
 
@@ -527,37 +543,55 @@ export default function home() {
     };
     
     useEffect(() => {
-        if (socket && userPlayer === "profesor" && actualProfesor != undefined){
+        if (socket && userPlayer === "profesor" && actualProfesor != undefined && playing === true){
             console.log("ENTRE EN LA FUNCION PINGALL PROFESOR")
             socket.emit("pingAll",{
                 xPositionProfesor: xPositionProfesor,
                 yPositionProfesor: yPositionProfesor,
                 userId: actualUser[0]}
-                //Se lo mando como objeto
             );
         }
-    }, [xPositionProfesor, yPositionProfesor, userPlayer, actualProfesor]);
+    }, [xPositionProfesor, yPositionProfesor, userPlayer, actualProfesor, playing]);
 
     useEffect(() => {
-        if (socket && userPlayer === "student" && actualStudent != undefined){
+        if (socket && userPlayer === "student" && actualStudent != undefined && playing === true){
             console.log("ENTRE EN LA FUNCION PINGALL ALUMNO")
             socket.emit("pingAll",{
                 xPositionStudent: xPositionStudent,
                 yPositionStudent: yPositionStudent,
                 userId: actualUser[0]}
-            //Se lo mando como objeto
         );
         }
-    }, [xPositionStudent, yPositionStudent, userPlayer, actualStudent, actualUser]);
+    }, [xPositionStudent, yPositionStudent, userPlayer, actualStudent, actualUser, playing]);
 
     useEffect(() => {
         if (socket && listoAlumno === true && listoProfesor === true){
+            setPlaying(true)
             setListo(false)
             socket.emit("pingPartidaIniciada", {
                 inicioPartida: true
             })
+            console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA")
         }
     }, [listoProfesor, listoAlumno]);
+
+    //MARK: Detectar si se tocan
+    useEffect(() => {
+        if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === false){
+            if (userPlayer === "profesor"){
+                addScore(10)
+                // alert("Atrapaste al alumno")
+                setPlayerPoints(10)
+                setFinalText("Ganaste")
+            } else {
+                // alert("Te atraparon")
+                setPlayerPoints(0)
+                setFinalText("Perdiste")
+                addScore(0)
+            }
+            setGame(false)
+        }
+    }, [xPositionProfesor, yPositionProfesor, xPositionStudent, yPositionStudent, userPlayer])
   
     //MARK: Socket
     const { socket, isConnected } = useSocket();
@@ -715,11 +749,11 @@ export default function home() {
                         </div>
                         {
                             actualProfesor != undefined &&
-                            <img style={{ left: `${xPositionProfesor}%`, top: `${yPositionProfesor}%`, background: "#F00000"}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
+                            <img style={{ left: `${xPositionProfesor}%`, top: `${yPositionProfesor}%`}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
                         }
                         {
                             actualStudent != undefined &&
-                            <img style={{ left: `${xPositionStudent}%`, top: `${yPositionStudent}%`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
+                            <img style={{ left: `${xPositionStudent}%`, top: `${yPositionStudent}%`}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
                         }
                         {
                             game === false &&
@@ -735,6 +769,10 @@ export default function home() {
                                                 return <li>{player.username}: {player.puntos} puntos</li>
                                             })}
                                         </ul>
+                                        <div>
+                                            <button onClick={startAgain}>Jugar otra vez</button>
+                                            <button onClick={closeSession}>Salir</button>
+                                        </div>
                                     </div>
                                 </div>
                             </>
