@@ -206,16 +206,25 @@ export default function home() {
 
         function pared(xpos, ypos, dir){
             const paredes = [
-                {xmin: 19, xmax: 49, ymin: 22, ymax: 26, dir: "arriba"},
-                {xmin: 14, xmax: 49, ymin: 11, ymax: 13, dir: "abajo"},
-                {xmin: 56, xmax: 78, ymin: 22, ymax: 26, dir: "arriba"},
-                {xmin: 56, xmax: 82, ymin: 11, ymax: 13, dir: "abajo"},
-                {xmin: 23, xmax: 53, ymin: 72, ymax: 76, dir: "arriba"},
-                {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo"},
-                {xmin: 64, xmax: 82, ymin: 72, ymax: 76, dir: "arriba"},
-                {xmin: 64, xmax: 82, ymin: 62, ymax: 64, dir: "abajo"},
-                /*{xmin: 19, xmax: 49, ymin: 0, ymax: 100, dir: "izquierda"},
-                {xmin: 19, xmax: 49, ymin: 0, ymax: 100, dir: "derecha"},*/
+                {xmin: 19, xmax: 49, ymin: 22, ymax: 26, dir: "arriba", name: "arriba izquierda"},
+                {xmin: 14, xmax: 49, ymin: 11, ymax: 13, dir: "abajo", name: "arriba izquierda2"},
+                {xmin: 56, xmax: 78, ymin: 22, ymax: 26, dir: "arriba", name: "arriba derecha"},
+                {xmin: 56, xmax: 82, ymin: 11, ymax: 13, dir: "abajo", name: "arriba derecha2"},
+                {xmin: 23, xmax: 53, ymin: 72, ymax: 76, dir: "arriba", name: "abajo izquierda"},
+                {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo", name: "abajo izquierda2"},
+                {xmin: 64, xmax: 82, ymin: 72, ymax: 76, dir: "arriba", name: "abajo derecha"},
+                {xmin: 64, xmax: 82, ymin: 62, ymax: 64, dir: "abajo", name: "abajo derecha2"},
+                {xmin: 17, xmax: 19, ymin: 14, ymax: 75, dir: "izquierda", name: "izquierda"},
+                {xmin: 14, xmax: 16, ymin: 14, ymax: 75, dir: "derecha", name: "izquierda2"},
+                {xmin: 81, xmax: 83, ymin: 14, ymax: 30, dir: "izquierda", name: "derecha arriba"},
+                {xmin: 77, xmax: 79, ymin: 14, ymax: 30, dir: "derecha", name: "derecha arriba2"},
+                {xmin: 81, xmax: 83, ymin: 40, ymax: 75, dir: "izquierda", name: "derecha abajo"},
+                {xmin: 77, xmax: 79, ymin: 40, ymax: 75, dir: "derecha", name: "derecha abajo2"},
+                {xmin: 48, xmax: 50, ymin: 6, ymax: 25, dir: "izquierda", name: "barrera arriba"},
+                {xmin: 44, xmax: 46, ymin: 6, ymax: 25, dir: "derecha", name: "barrera arriba2"},
+                {xmin: 26, xmax: 28, ymin: 57, ymax: 75, dir: "izquierda", name: "barrera abajo izquierda"},
+                {xmin: 23, xmax: 25, ymin: 57, ymax: 75, dir: "derecha", name: "barrera abajo izquierda2"},
+
             ]
             for (let x in paredes){
                 console.log(x)
