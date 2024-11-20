@@ -113,7 +113,7 @@ export default function home() {
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }, { name: "Naddeo", description: "Pruebas más dificiles" }])
     const [alumnos, setAlumnos] = useState([{ name: "Maraval", description: "Pelado insoportable." }, { name: "Lujan", description: "Experta en quejas" }, { name: "Tomi", description: "Pollera" }, { name: "Cachete", description: "Traga" }, { name: "Mica", description: "Gimnasta" }, { name: "May", description: "Gei" }, { name: "Candela", description: "Ex comu" }, { name: "Lucas", description: "Judio" }, { name: "Juan", description: "Golpeado" }, { name: "Agus", description: "El primo" }, { name: "Tomi Beli", description: "Anti Pala" }])
-    const [mapas, setMapas] =useState (["Fondo cancha", "Fondo espacio", "Fondo Maria", "Fondo montaña", "Fondo playa", "Fondo selva"])
+    const [mapas, setMapas] =useState (["Fondo Gris", "Fondo Cancha", "Fondo Espacio", "Fondo Maria", "Fondo Montaña", "Fondo Playa", "Fondo Selva", "Pitufialdea", "Mar"])
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(0)
     const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(0)
     const [mapaSeleccionado, setMapaSeleccionado] = useState (0)
@@ -167,9 +167,6 @@ export default function home() {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [profesorSeleccionado, selectProfesor, selectStudent, alumnoSeleccionado, selectMap, mapaSeleccionado]);
-
-    // const altoPantalla = window.innerHeight
-    // const anchoPantalla = window.outerWidth
 
     const [keyState, setKeyState] = useState({});
 
@@ -295,13 +292,15 @@ export default function home() {
     useEffect(() => {
         if (((xPositionProfesor + 4 < xPositionStudent || xPositionProfesor > xPositionStudent + 4) || (yPositionProfesor + 11 < yPositionStudent || yPositionProfesor > yPositionStudent + 11)) === false){
             if (userPlayer === "profesor"){
+                addScore(10)
                 alert("Atrapaste al alumno")
-                topScorers(10)
                 setPlayerPoints(10)
+                setFinalText("Ganaste")
             } else {
                 alert("Te atraparon")
-                topScorers(0)
                 setPlayerPoints(0)
+                setFinalText("Perdiste")
+                addScore(0)
             }
             setGame(false)
         }
@@ -474,7 +473,7 @@ export default function home() {
         console.log(result)
     }
 
-    async function topScorers(points){
+    async function addScore(points){
         const data = {
             puntos: points,
             userId: actualUser[0]
@@ -492,6 +491,10 @@ export default function home() {
         if (!response.ok) throw new Error('Error en la respuesta de la red');
         const result = await response.json();
 
+        topScorers()
+    }
+
+    async function topScorers(){
         const response1 = await fetch('http://localhost:4000/topScorers', {
             method: 'GET',
             headers: {
@@ -723,9 +726,10 @@ export default function home() {
                             <>
                                 <div className={styles.finalGameBody}>
                                     <div className={styles.finalGame}>
-                                        <h2>Partida terminada</h2>
-                                        <h3>{finalText}</h3>
-                                        <p>Obtuviste {playerPoints} puntos</p>
+                                        <h2 style={{fontSize: "50px" ,marginBottom: "5px"}}>{finalText}</h2>
+                                        <h3 style={{marginBottom: "10px"}}>Partida terminada</h3>
+                                        <p style={{fontSize: "18px", marginBottom: "5px", fontStyle: "italic"}}>Obtuviste {playerPoints} puntos</p>
+                                        <p style={{fontSize: "18px", marginBottom: "5px"}}>Los jugadores con más puntos son:</p>
                                         <ul>
                                             {listPlayers.map((player) => {
                                                 return <li>{player.username}: {player.puntos} puntos</li>

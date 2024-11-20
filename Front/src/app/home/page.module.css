@@ -273,4 +273,11 @@
   -webkit-box-shadow: -2px 6px 60px 15px rgba(0,0,0,0.7);
   -moz-box-shadow: -2px 6px 60px 15px rgba(0,0,0,0.7);
   box-shadow: -2px 6px 60px 15px rgba(0,0,0,0.7);
+  text-align: center;
+}
+
+.finalGame ul {
+  text-align: left;
+  margin-left: 30%;
+  font-size: 18px;
 }
