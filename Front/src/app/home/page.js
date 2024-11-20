@@ -1,5 +1,4 @@
 "use client"
-import Button_theme from "@/components/Button_theme";
 import InputLogin from "@/components/InputLogin";
 import Profesor from "@/components/Profesor";
 import { useEffect, useState } from "react";
@@ -123,7 +122,9 @@ export default function home() {
     const [selectPlayer, setSelectPlayer] = useState(false)
     const [selectStudent, setSelectStudent] = useState(false)
     const [userPlayer, setUserPlayer] = useState("")
-    const [selectMap, setSelectMap]= useState (false)
+    const [selectMap, setSelectMap] = useState (false)
+    const [finalText, setFinalText] = useState("")
+    const [playerPoints, setPlayerPoints] = useState(0)
 
     const [xPositionProfesor, setXProfesor] = useState(4);
     const [xPositionStudent, setXStudent] = useState(92);
@@ -132,6 +133,7 @@ export default function home() {
     const [listo, setListo] = useState(false)
     const [listoProfesor, setListoProfesor] = useState(false);
     const [listoAlumno, setListoAlumno] = useState(false);
+    
     function handleContador() {
         setContador(true)
     }
@@ -679,9 +681,18 @@ export default function home() {
                             actualStudent != undefined &&
                             <img style={{ left: `${xPositionStudent}%`, top: `${yPositionStudent}%`, background: "#F00000"}} src={`/${actualStudent.name}.gif`} className={styles.alumno} alt={`Foto de ${actualStudent.name}`} />
                         }
-                        <div className={styles.chat} id="chat">
-                            
-                        </div>
+                        {
+                            game === false &&
+                            <>
+                                <div className={styles.finalGameBody}>
+                                    <div className={styles.finalGame}>
+                                        <h2>Partida terminada</h2>
+                                        <h3>{finalText}</h3>
+                                        <p>Obtuviste {playerPoints} puntos</p>
+                                    </div>
+                                </div>
+                            </>
+                        }
                         <div className={styles.bottombar}>
                             <h2>Promedio: {actualUser[1]}</h2>
                         </div>
