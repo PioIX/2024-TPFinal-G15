@@ -113,6 +113,10 @@ export default function home() {
         setPlaying(false)
         setActualStudent()
         setActualProfesor()
+        setNotas([{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
+        setPromedio(0)
+        setCantNotas(0)
+        setSumaNotas(0)
     }
 
     function startAgain() {
@@ -131,6 +135,10 @@ export default function home() {
         setPlaying(false)
         setActualStudent()
         setActualProfesor()
+        setNotas([{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
+        setPromedio(0)
+        setCantNotas(0)
+        setSumaNotas(0)
     }
 
     const handleUsernameChange = (e) => {
@@ -170,7 +178,13 @@ export default function home() {
     const [keyState, setKeyState] = useState({});
     const [game, setGame] = useState(true);
     const [playing, setPlaying] = useState(false)
-    
+
+    const [notas, setNotas] = useState([{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
+    const [promedio, setPromedio] = useState(0)
+    const [cantNotas, setCantNotas] = useState(0)
+    const [sumaNotas, setSumaNotas] = useState(0)
+
+
     function handleContador() {
         setContador(true)
     }
@@ -218,17 +232,18 @@ export default function home() {
         }));
     };
 
+    //MARK: Paredes
     const handleMovement = (player) => {
         // Condición para definir si el profesor está fuera de la primera pared
 
         function pared(xpos, ypos, dir){
             const paredes = [
-                {xmin: 19, xmax: 49, ymin: 22, ymax: 26, dir: "arriba", name: "arriba izquierda"},
+                {xmin: 19, xmax: 49, ymin: 22, ymax: 25, dir: "arriba", name: "arriba izquierda"},
                 {xmin: 14, xmax: 49, ymin: 11, ymax: 13, dir: "abajo", name: "arriba izquierda2"},
-                {xmin: 56, xmax: 78, ymin: 22, ymax: 26, dir: "arriba", name: "arriba derecha"},
+                {xmin: 56, xmax: 78, ymin: 22, ymax: 25, dir: "arriba", name: "arriba derecha"},
                 {xmin: 56, xmax: 82, ymin: 11, ymax: 13, dir: "abajo", name: "arriba derecha2"},
-                {xmin: 23, xmax: 53, ymin: 72, ymax: 76, dir: "arriba", name: "abajo izquierda"},
-                {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo", name: "abajo izquierda2"},
+                {xmin: 24, xmax: 53, ymin: 72, ymax: 76, dir: "arriba", name: "abajo izquierda"},
+                {xmin: 24, xmax: 58, ymin: 62, ymax: 64, dir: "abajo", name: "abajo izquierda2"},
                 {xmin: 65, xmax: 82, ymin: 72, ymax: 76, dir: "arriba", name: "abajo derecha"},
                 {xmin: 65, xmax: 82, ymin: 62, ymax: 64, dir: "abajo", name: "abajo derecha2"},
                 {xmin: 17, xmax: 19, ymin: 14, ymax: 74, dir: "izquierda", name: "izquierda"},
@@ -634,9 +649,82 @@ export default function home() {
             socket.emit("pingPartidaIniciada", {
                 inicioPartida: true
             })
-            console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAA")
         }
     }, [listoProfesor, listoAlumno]);
+
+    // [{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}]
+    
+    // useEffect(() => {
+    //     for (let i in notas){
+    //         if (((xPositionStudent + 4 < 75 || xPositionStudent > 75 + 4) || (yPositionStudent + 11 < 83 || yPositionStudent > 83 + 11)) === false){
+    //             setNotas([{nota: 1, display: "none", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
+    //         } else if (((xPositionStudent + 4 < 75 || xPositionStudent > 75 + 4) || (yPositionStudent + 11 < 83 || yPositionStudent > 83 + 11)) === false){
+    //             setNotas([{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
+    //         }
+    //     }
+    // }, [xPositionStudent, yPositionStudent, notas]);
+
+
+    useEffect(() => {
+        setNotas((prevNotas) =>
+            prevNotas.map((nota) => {
+                const isColliding =
+                    xPositionStudent + 2.5 >= nota.x &&
+                    xPositionStudent <= nota.x + 4 &&
+                    yPositionStudent + 9 >= nota.y &&
+                    yPositionStudent <= nota.y + 11;
+    
+                if (isColliding && nota.display !== "none") {
+                    setCantNotas(cantNotas + 1)
+                    setSumaNotas(sumaNotas + nota.nota)
+    
+                    // Redondeamos el promedio a 2 decimales
+                    const nuevoPromedio = ((sumaNotas + nota.nota) / (cantNotas + 1)).toFixed(2);
+                    setPromedio(parseFloat(nuevoPromedio)); // Convertimos de string a número
+                    return { ...nota, display: "none" };
+                }
+    
+                return nota;
+            })
+        );
+    }, [xPositionStudent, yPositionStudent]);
+
+    // useEffect(() => {
+    //     setNotas((prevNotas) =>
+    //         prevNotas.map((nota) => {
+    //             const isColliding =
+    //                 xPositionStudent + 2.5 >= nota.x &&
+    //                 xPositionStudent <= nota.x + 4 &&
+    //                 yPositionStudent + 9 >= nota.y &&
+    //                 yPositionStudent <= nota.y + 11;
+
+    //             if (isColliding && nota.display != `none`) {
+    //                 setCantNotas(cantNotas + 1)
+    //                 setSumaNotas(sumaNotas + nota.nota)
+    //                 setPromedio((sumaNotas + nota.nota) / (cantNotas + 1))
+    //                 console.log(cantNotas, sumaNotas, promedio)
+    //                 return { ...nota, display: "none" };
+    //             }
+    
+    //             return nota;
+    //         })
+    //     );
+    // }, [xPositionStudent, yPositionStudent]);
+
+    useEffect(() => {
+        if (cantNotas === 8){
+            if (userPlayer === "student"){
+                addScore(10)
+                setPlayerPoints(10)
+                setFinalText("Ganaste")
+            } else {
+                setPlayerPoints(0)
+                setFinalText("Perdiste")
+                addScore(0)
+            }
+            setGame(false)
+        }
+    }, [cantNotas])
 
     //MARK: Detectar si se tocan
     useEffect(() => {
@@ -800,6 +888,8 @@ export default function home() {
                     </div>
                 </>
             }
+            
+            {/* MARK: Juego */}
             {
                 actualUser != "" && selectProfesor == false && selectStudent == false && selectPlayer == false && selectMap == false && listo == false &&
                 <>
@@ -810,6 +900,9 @@ export default function home() {
                                 {seconds === 0 && <h2>¡Tiempo terminado!</h2>}
                             </div>
                         </div>
+                        {notas.map((nota) => {
+                            return <img src={`/Fotos notas/${nota.nota}.png`} style={{display: `${nota.display}`, left: `${nota.x}%`, top: `${nota.y}%`, height: `15%`, width: `auto`, position: `absolute`}}></img>
+                        })}
                         {
                             actualProfesor != undefined &&
                             <img style={{ left: `${xPositionProfesor}%`, top: `${yPositionProfesor}%`}} src={`/${actualProfesor.name}.gif`} className={styles.profesor} alt={`Foto de ${actualProfesor.name}`} />
@@ -841,7 +934,7 @@ export default function home() {
                             </>
                         }
                         <div className={styles.bottombar}>
-                            <h2>Promedio: {actualUser[1]}</h2>
+                            <h2>Promedio: {promedio}</h2>
                         </div>
                     </div>
                 </>

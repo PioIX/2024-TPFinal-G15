@@ -123,7 +123,7 @@
   height: 100vh;
   background-color: rgb(255 255 255 / 30%);
   backdrop-filter: blur(1px);
-  padding: 0 26vw 0 26vw
+  padding: 0 26vw 0 26vw;
 }
 
 .bodySelectProfesor button {
@@ -192,6 +192,7 @@
   position: absolute;
   left: 10px;
   top: 5px;
+  transition: 0.2s ease-out
 }
 
 .selectPlayer {
@@ -213,7 +214,6 @@
   margin: 5px 0 5px 0;
   text-align: center;
 }
-
 
 .selectPlayer button {
   width: 10vw;
@@ -248,6 +248,7 @@
   position: absolute;
   left: 96%;
   top: 89%;
+  transition: 0.2s ease-out
 }
 
 .textosLogin {
