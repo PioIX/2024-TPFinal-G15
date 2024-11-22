@@ -277,7 +277,7 @@ export default function home() {
             return true
         }
 
-        if (keyState['W'] || keyState['w']) {
+        if (keyState['W'] || keyState['w'] || keyState['ArrowUp']) {
             if (player === "profesor") {
                 // Verifica si el personaje está fuera de los límites de la pared en X o Y para permitir el movimiento
                 if (pared(xPositionProfesor, yPositionProfesor, "arriba")) {
@@ -298,7 +298,7 @@ export default function home() {
             }
         }
         
-        if (keyState['A'] || keyState['a']){
+        if (keyState['A'] || keyState['a'] || keyState['ArrowLeft']){
             if (player == "profesor") {
                 if (pared(xPositionProfesor, yPositionProfesor, "izquierda")){
                     if (xPositionProfesor - 1 >= 0) {
@@ -313,7 +313,7 @@ export default function home() {
                 }
             }
         }
-        if (keyState['S'] || keyState['s']) {
+        if (keyState['S'] || keyState['s'] || keyState['ArrowDown']) {
             if (player == "profesor") {
                 if (pared(xPositionProfesor, yPositionProfesor, "abajo")){
                     if (yPositionProfesor + 2 < 100 - 11) {
@@ -332,7 +332,7 @@ export default function home() {
                 }
             }
         }
-        if (keyState['D'] || keyState['d']) {
+        if (keyState['D'] || keyState['d'] || keyState['ArrowRight']) {
             if (player == "profesor") {
                 if (pared(xPositionProfesor, yPositionProfesor, "derecha")){
                     if (xPositionProfesor + 1 < 100 - 4) {
