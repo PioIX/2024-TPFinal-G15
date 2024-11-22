@@ -223,12 +223,34 @@ export default function home() {
 
         function pared(xpos, ypos, dir){
             const paredes = [
-                {xmin: 19, xmax: 49, ymin: 22, ymax: 26, dir: "arriba"},
-                {xmin: 14, xmax: 49, ymin: 11, ymax: 13, dir: "abajo"},
-                {xmin: 56, xmax: 78, ymin: 22, ymax: 26, dir: "arriba"},
-                {xmin: 56, xmax: 82, ymin: 11, ymax: 13, dir: "abajo"},
-                {xmin: 23, xmax: 53, ymin: 72, ymax: 76, dir: "arriba"},
-                {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo"}
+                {xmin: 19, xmax: 49, ymin: 22, ymax: 26, dir: "arriba", name: "arriba izquierda"},
+                {xmin: 14, xmax: 49, ymin: 11, ymax: 13, dir: "abajo", name: "arriba izquierda2"},
+                {xmin: 56, xmax: 78, ymin: 22, ymax: 26, dir: "arriba", name: "arriba derecha"},
+                {xmin: 56, xmax: 82, ymin: 11, ymax: 13, dir: "abajo", name: "arriba derecha2"},
+                {xmin: 23, xmax: 53, ymin: 72, ymax: 76, dir: "arriba", name: "abajo izquierda"},
+                {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo", name: "abajo izquierda2"},
+                {xmin: 65, xmax: 82, ymin: 72, ymax: 76, dir: "arriba", name: "abajo derecha"},
+                {xmin: 65, xmax: 82, ymin: 62, ymax: 64, dir: "abajo", name: "abajo derecha2"},
+                {xmin: 17, xmax: 19, ymin: 14, ymax: 74, dir: "izquierda", name: "izquierda"},
+                {xmin: 14, xmax: 16, ymin: 14, ymax: 74, dir: "derecha", name: "izquierda2"},
+                {xmin: 81, xmax: 83, ymin: 14, ymax: 30, dir: "izquierda", name: "derecha arriba"},
+                {xmin: 77, xmax: 79, ymin: 14, ymax: 30, dir: "derecha", name: "derecha arriba2"},
+                {xmin: 81, xmax: 83, ymin: 40, ymax: 75, dir: "izquierda", name: "derecha abajo"},
+                {xmin: 77, xmax: 79, ymin: 40, ymax: 75, dir: "derecha", name: "derecha abajo2"},
+                {xmin: 48, xmax: 50, ymin: 6, ymax: 25, dir: "izquierda", name: "barrera arriba"},
+                {xmin: 44, xmax: 46, ymin: 6, ymax: 25, dir: "derecha", name: "barrera arriba2"},
+                {xmin: 26, xmax: 28, ymin: 57, ymax: 75, dir: "izquierda", name: "barrera abajo izquierda"},
+                {xmin: 23, xmax: 25, ymin: 57, ymax: 75, dir: "derecha", name: "barrera abajo izquierda2"},
+                {xmin: 57, xmax: 59, ymin: 63, ymax: 83, dir: "izquierda", name: "barrera abajo derecha"},
+                {xmin: 53, xmax: 55, ymin: 75, ymax: 83, dir: "derecha", name: "barrera abajo derecha2"},
+                {xmin: 55, xmax: 57, ymin: 13, ymax: 24, dir: "derecha", name: "marco1"},
+                {xmin: 78, xmax: 82, ymin: 30, ymax: 32, dir: "arriba", name: "marco2"},
+                {xmin: 78, xmax: 82, ymin: 38, ymax: 40, dir: "abajo", name: "marco3"},
+                {xmin: 63, xmax: 65, ymin: 63, ymax: 75, dir: "derecha", name: "marco4"},
+                {xmin: 54, xmax: 58, ymin: 82, ymax: 84, dir: "arriba", name: "marco5"},
+                {xmin: 24, xmax: 27, ymin: 55, ymax: 57, dir: "abajo", name: "marco6"},
+                {xmin: 14, xmax: 18, ymin: 74, ymax: 76, dir: "arriba", name: "marco7"},
+                {xmin: 45, xmax: 49, ymin: 4, ymax: 6, dir: "abajo", name: "marco8"},
             ]
             for (let x in paredes){
                 console.log(x)
@@ -262,12 +284,16 @@ export default function home() {
         
         if (keyState['A'] || keyState['a']){
             if (player == "profesor") {
-                if (xPositionProfesor - 1 >= 0) {
-                    setXProfesor(xPositionProfesor - 1)
+                if (pared(xPositionProfesor, yPositionProfesor, "izquierda")){
+                    if (xPositionProfesor - 1 >= 0) {
+                        setXProfesor(xPositionProfesor - 1)
+                    }
                 }
             } else if (player == "student") {
-                if (xPositionStudent - 1 >= 0) {
-                    setXStudent(xPositionStudent - 1)
+                if (pared(xPositionStudent, yPositionStudent, "izquierda")){
+                    if (xPositionStudent - 1 >= 0) {
+                        setXStudent(xPositionStudent - 1)
+                    }
                 }
             }
         }
@@ -292,12 +318,16 @@ export default function home() {
         }
         if (keyState['D'] || keyState['d']) {
             if (player == "profesor") {
-                if (xPositionProfesor + 1 < 100 - 4) {
+                if (pared(xPositionProfesor, yPositionProfesor, "derecha")){
+                    if (xPositionProfesor + 1 < 100 - 4) {
                     setXProfesor(xPositionProfesor + 1)
+                    }
                 }
             } else if (player == "student") {
-                if (xPositionStudent + 1 < 100 - 4) {
-                    setXStudent(xPositionStudent + 1)
+                if (pared(xPositionStudent, yPositionStudent, "derecha")){
+                    if (xPositionStudent + 1 < 100 - 4) {
+                        setXStudent(xPositionStudent + 1)
+                    }
                 }
             }
         }
