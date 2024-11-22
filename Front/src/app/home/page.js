@@ -141,7 +141,7 @@ export default function home() {
         setPassword(e.target.value);
     };
     
-    const [seconds, setSeconds] = useState(180); // 3 minutos en segundos
+    const [seconds, setSeconds] = useState(0); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }, { name: "Naddeo", description: "Pruebas más dificiles" }])
     const [alumnos, setAlumnos] = useState([{ name: "Maraval", description: "Pelado insoportable." }, { name: "Lujan", description: "Experta en quejas" }, { name: "Tomi", description: "Pollera" }, { name: "Cachete", description: "Traga" }, { name: "Mica", description: "Gimnasta" }, { name: "May", description: "Gei" }, { name: "Candela", description: "Ex comu" }, { name: "Lucas", description: "Judio" }, { name: "Juan", description: "Golpeado" }, { name: "Agus", description: "El primo" }, { name: "Tomi Beli", description: "Anti Pala" }])
@@ -176,7 +176,7 @@ export default function home() {
     }
 
     const handleKeyDown = (event) => {
-        console.log(event.key); // Para depurar
+        //console.log(event.key); // Para depurar
         if (event.key === 'ArrowRight') {
             handleRight();
         } else if (event.key === "ArrowLeft") {
@@ -253,7 +253,7 @@ export default function home() {
                 {xmin: 45, xmax: 49, ymin: 4, ymax: 6, dir: "abajo", name: "marco8"},
             ]
             for (let x in paredes){
-                console.log(x)
+                //console.log(x)
                 if (((xpos < paredes[x].xmin || xpos > paredes[x].xmax) || (ypos < paredes[x].ymin || ypos > paredes[x].ymax)) === false && paredes[x].dir === dir){
                     return ((xpos < paredes[x].xmin || xpos > paredes[x].xmax) || (ypos < paredes[x].ymin || ypos > paredes[x].ymax))
                 }
@@ -349,7 +349,7 @@ export default function home() {
         if (game === true){
             handleMovement(userPlayer);
 
-            console.log(keyState)
+            //console.log(keyState)
         }
     }, [keyState, userPlayer, game]);
 
@@ -448,6 +448,7 @@ export default function home() {
         setSelectMap(false)
         handleContador()
         setListo(true)
+        resetTimer()
     }
 
     async function funSelectStudent() {
@@ -555,8 +556,40 @@ export default function home() {
         setListPlayers(result1.list)
     }
 
-    //MARK: Contador
+    
+       
     useEffect(() => {
+        if (socket && contador===true && listoAlumno === true && listoProfesor=== true) {
+            socket.emit("startTimer"); // Notificar al servidor para iniciar el contador
+            console.log("inicié el timer")
+        }
+    }, [contador, listoAlumno, listoProfesor]);    
+    useEffect(() => {
+        if (socket && contador===true && listoAlumno === true && listoProfesor=== true){
+             // Conecta al servidor WebSocket
+        
+
+            // Escuchar actualizaciones del servidor
+            socket.on("updateTimer", (time) => {
+                console.log("time papus")
+                setSeconds(time); // Actualizar el estado del tiempo
+            });
+
+            // Limpiar el listener al desmontar
+            return () => {
+                socket.off("updateTimer");
+            };}
+    }, [contador, listoAlumno, listoProfesor]);
+    
+    function resetTimer() {
+    socket.emit("resetTimer")}
+    
+
+
+
+
+    //MARK: Contador
+    /*useEffect(() => {
         if (seconds > 0 && contador === true && listoAlumno === true && listoProfesor === true) {
             const timer = setInterval(() => {
                 setSeconds(prevSeconds => prevSeconds - 1);
@@ -564,7 +597,7 @@ export default function home() {
 
             return () => clearInterval(timer); // Limpiar el intervalo al desmontar
         }
-    }, [seconds, contador, listoAlumno, listoProfesor]);
+    }, [seconds, contador, listoAlumno, listoProfesor]);*/
 
     const formatTime = (sec) => {
         const minutes = Math.floor(sec / 60);

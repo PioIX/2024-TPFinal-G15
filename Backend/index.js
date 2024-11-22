@@ -75,7 +75,7 @@ app.post('/login', async function(req,res) {
 		res.send({message: "Usuario o contraseña incorrecta"})
 	} else {
 		res.send({user: result, message: "Inicio de sesión correcto"});
-		console.log(result)
+		//console.log(result)
 	}
 });
 
@@ -90,7 +90,7 @@ app.post('/register', async function(req, res) {
 	} else {
 		res.send({message: 'Usuario agregado a la tabla', user: result2});
 	}
-	console.log(result2)
+	//console.log(result2)
 });
 
 app.get('/topScorers', async function(req,res) {
@@ -129,12 +129,13 @@ app.post('/logOut', function(req,res) {
 	}
 	res.send({message: "log out completado", users: datosUsuarios})
 });
-
+let timerValue = 180; // Valor inicial del contador
+let timerInterval = null;
 io.on("connection", (socket) => {
 	const req = socket.request;
 
 	socket.on('joinRoom', data => {
-		console.log("🚀 ~ io.on ~ req.session.room:", req.session.room)
+		//console.log("🚀 ~ io.on ~ req.session.room:", req.session.room)
 		if (req.session.room != undefined && req.session.room.length > 0)
 			socket.leave(req.session.room);
 		req.session.room = data.room;
@@ -149,36 +150,36 @@ io.on("connection", (socket) => {
 	})
 
 	socket.on('pingAll', data => {
-		console.log("PING ALL: ", data);
+		//console.log("PING ALL: ", data);
 		io.emit('pingAll', { event: "Ping to all", message: data });
 	});
 
 	socket.on('pingPlayer', data => {
-		console.log("PING PLAYER: ", data);
+		//console.log("PING PLAYER: ", data);
 		if (data.actualProfesor){
 			datosUsuarios.actualProfesor = data.actualProfesor
-			console.log(datosUsuarios)
+			//console.log(datosUsuarios)
 		}
 		if (data.actualStudent){
 			datosUsuarios.actualStudent = data.actualStudent
-			console.log(datosUsuarios)
+			//console.log(datosUsuarios)
 		}
 	});
 
 	socket.on('pingListo', data => {
-		console.log("PING LISTO: ", data);
+		//console.log("PING LISTO: ", data);
 		if (data != undefined){
 			if (data.listoProfesor){
 				datosUsuarios.listoProfesor = data.listoProfesor
-				console.log(datosUsuarios)
+				//console.log(datosUsuarios)
 			}
 			if (data.listoAlumno){
 				datosUsuarios.listoAlumno = data.listoAlumno
-				console.log(datosUsuarios)
+				//console.log(datosUsuarios)
 			}
 			io.emit('pingListo', { event: "Ping to listo", info: datosUsuarios });
 			if (data.inicioPartida){
-				console.log("inicio partida")
+				//console.log("inicio partida")
 				datosUsuarios.actualProfesor = ""
 				datosUsuarios.actualStudent = ""
 				datosUsuarios.listoProfesor = false
@@ -189,7 +190,7 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on('pingPartidaIniciada', data => {
-		console.log("PING PARTIDA INICIADA: ", data);
+		//console.log("PING PARTIDA INICIADA: ", data);
 		if (data != undefined){
 			datosUsuarios.actualProfesor = ""
 			datosUsuarios.actualStudent = ""
@@ -197,8 +198,32 @@ io.on("connection", (socket) => {
 			datosUsuarios.listoAlumno = false
 		}
 		io.emit('pingPartidaIniciada', { event: "Ping to partida iniciada", info: datosUsuarios });
-		console.log(datosUsuarios)
-		console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+		//console.log(datosUsuarios)
+		//console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+	});
+// Backend
+
+
+
+
+    socket.on("startTimer", () => {
+		console.log("timerrr")
+        if (!timerInterval) {
+			console.log("entré en timer interval")
+            timerInterval = setInterval(() => {
+                if (timerValue > 0) {
+                    timerValue -= 1;
+                    io.emit("updateTimer", timerValue);
+					console.log(timerValue)
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            }, 1000);
+        }
+    });
+	socket.on("resetTimer", () => {
+		timerValue = 180
 	});
 
 	socket.on('disconnect', () => {
