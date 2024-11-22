@@ -19,7 +19,7 @@ export default function home() {
                 username: username,
             }
 
-            const response = await fetch('http://localhost:4000/getUser', {
+            const response = await fetch('http://10.1.5.133:4000/getUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -36,7 +36,7 @@ export default function home() {
                     password: password
                 }
 
-                const response1 = await fetch('http://localhost:4000/register', {
+                const response1 = await fetch('http://10.1.5.133:4000/register', {
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',
@@ -49,7 +49,7 @@ export default function home() {
 
 
                 if (result1 != undefined || result1.length != 0) {
-                    setActualUser([result1.user[0].userId, result1.user[0].username])
+                    setActualUser([result1.user[0].userid, result1.user[0].username])
                     alert("Registro realizado correctamente")
                     setUsername("")
                     setPassword("")
@@ -71,7 +71,7 @@ export default function home() {
                 password: password
             }
 
-            const response = await fetch('http://localhost:4000/login', {
+            const response = await fetch('http://10.1.5.133:4000/login', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -98,48 +98,49 @@ export default function home() {
     }
 
     function closeSession() {
-        setGame(true)
-        setXProfesor(4)
-        setYProfesor(5)
-        setXStudent(92)
-        setYStudent(84)
-        setContador(false)
-        setListoProfesor(false)
-        setListoAlumno(false)
-        setActualUser([])
-        setUserPlayer("")
-        setMapaSeleccionado(0)
-        setSeconds(60)
-        setPlaying(false)
-        setActualStudent()
-        setActualProfesor()
-        setNotas([{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
-        setPromedio(0)
-        setCantNotas(0)
-        setSumaNotas(0)
+        // setGame(true)
+        // setXProfesor(4)
+        // setYProfesor(5)
+        // setXStudent(92)
+        // setYStudent(84)
+        // setContador(false)
+        // setListoProfesor(false)
+        // setListoAlumno(false)
+        // setActualUser([])
+        // setUserPlayer("")
+        // setMapaSeleccionado(0)
+        // setSeconds(60)
+        // setPlaying(false)
+        // setActualStudent()
+        // setActualProfesor()
+        // setNotas([{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
+        // setPromedio(0)
+        // setCantNotas(0)
+        // setSumaNotas(0)
+        window.location.reload()
     }
 
-    function startAgain() {
-        setXProfesor(4)
-        setYProfesor(5)
-        setXStudent(92)
-        setYStudent(84)
-        setGame(true)
-        setSelectPlayer(true)
-        setContador(false)
-        setListoProfesor(false)
-        setListoAlumno(false)
-        setUserPlayer("")
-        setMapaSeleccionado(0)
-        setSeconds(60)
-        setPlaying(false)
-        setActualStudent()
-        setActualProfesor()
-        setNotas([{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
-        setPromedio(0)
-        setCantNotas(0)
-        setSumaNotas(0)
-    }
+    // function startAgain() {
+    //     setXProfesor(4)
+    //     setYProfesor(5)
+    //     setXStudent(92)
+    //     setYStudent(84)
+    //     setGame(true)
+    //     setSelectPlayer(true)
+    //     setContador(false)
+    //     setListoProfesor(false)
+    //     setListoAlumno(false)
+    //     setUserPlayer("")
+    //     setMapaSeleccionado(0)
+    //     setSeconds(60)
+    //     setPlaying(false)
+    //     setActualStudent()
+    //     setActualProfesor()
+    //     setNotas([{nota: 1, display: "", x: 75, y: 83}, {nota: 3, display: "", x: 88, y: 34}, {nota: 5, display: "", x: 4, y: 64}, {nota: 6, display: "", x: 60, y: 9}, {nota: 7, display: "", x: 35, y: 80}, {nota: 8, display: "", x: 70, y: 55}, {nota: 9, display: "", x: 20, y: 40}, {nota: 10, display: "", x: 18, y: 6}])
+    //     setPromedio(0)
+    //     setCantNotas(0)
+    //     setSumaNotas(0)
+    // }
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -244,7 +245,7 @@ export default function home() {
                 {xmin: 56, xmax: 82, ymin: 11, ymax: 13, dir: "abajo", name: "arriba derecha2"},
                 {xmin: 24, xmax: 53, ymin: 72, ymax: 76, dir: "arriba", name: "abajo izquierda"},
                 {xmin: 24, xmax: 58, ymin: 62, ymax: 64, dir: "abajo", name: "abajo izquierda2"},
-                {xmin: 65, xmax: 82, ymin: 72, ymax: 76, dir: "arriba", name: "abajo derecha"},
+                {xmin: 65, xmax: 81, ymin: 72, ymax: 76, dir: "arriba", name: "abajo derecha"},
                 {xmin: 65, xmax: 82, ymin: 62, ymax: 64, dir: "abajo", name: "abajo derecha2"},
                 {xmin: 17, xmax: 19, ymin: 14, ymax: 74, dir: "izquierda", name: "izquierda"},
                 {xmin: 14, xmax: 16, ymin: 14, ymax: 74, dir: "derecha", name: "izquierda2"},
@@ -437,7 +438,7 @@ export default function home() {
     }
 
     async function funSelectProfesor() {
-        const response = await fetch('http://localhost:4000/getPlayer', {
+        const response = await fetch('http://10.1.5.133:4000/getPlayer', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -467,7 +468,7 @@ export default function home() {
     }
 
     async function funSelectStudent() {
-        const response = await fetch('http://localhost:4000/getPlayer', {
+        const response = await fetch('http://10.1.5.133:4000/getPlayer', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -520,7 +521,7 @@ export default function home() {
             player: userPlayer,
         }
 
-        const response = await fetch('http://localhost:4000/logOut', {
+        const response = await fetch('http://10.1.5.133:4000/logOut', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -541,7 +542,7 @@ export default function home() {
             userId: actualUser[0]
         }
 
-        const response = await fetch('http://localhost:4000/addScore', {
+        const response = await fetch('http://10.1.5.133:4000/addScore', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -557,7 +558,7 @@ export default function home() {
     }
 
     async function topScorers(){
-        const response1 = await fetch('http://localhost:4000/topScorers', {
+        const response1 = await fetch('http://10.1.5.133:4000/topScorers', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -574,7 +575,6 @@ export default function home() {
     useEffect(() => {
         if (socket && contador === true && listoAlumno === true && listoProfesor === true) {
             socket.emit("startTimer"); // Notificar al servidor para iniciar el contador
-            console.log("inicié el timer")
         }
     }, [contador, listoAlumno, listoProfesor]);
 
@@ -582,7 +582,6 @@ export default function home() {
         if (socket && contador === true && listoAlumno === true && listoProfesor === true){
             // Escuchar actualizaciones del servidor
             socket.on("updateTimer", (time) => {
-                console.log("time papus")
                 setSeconds(time); // Actualizar el estado del tiempo
             });
 
@@ -705,6 +704,7 @@ export default function home() {
                 setFinalText("Perdiste")
                 addScore(0)
             }
+            socket.off("updateTimer");
             setGame(false)
         }
     }, [cantNotas])
@@ -723,6 +723,7 @@ export default function home() {
                 setFinalText("Perdiste")
                 addScore(0)
             }
+            socket.off("updateTimer");
             setGame(false)
         }
     }, [xPositionProfesor, yPositionProfesor, xPositionStudent, yPositionStudent, userPlayer])
@@ -746,6 +747,7 @@ export default function home() {
                 setFinalText("Perdiste")
                 addScore(0)
             }
+            socket.off("updateTimer");
             setGame(false)
         }
     }, [seconds, promedio, userPlayer])
@@ -932,7 +934,6 @@ export default function home() {
                                             })}
                                         </ul>
                                         <div>
-                                            <button onClick={startAgain}>Jugar otra vez</button>
                                             <button onClick={closeSession}>Salir</button>
                                         </div>
                                     </div>
@@ -945,7 +946,6 @@ export default function home() {
                     </div>
                 </>
             }
-            <button onClick={logOut}>Log out</button>
         </>
     )
 }

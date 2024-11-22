@@ -22,13 +22,13 @@ app.use(bodyParser.json());
 const LISTEN_PORT = 4000;								// Puerto por el que estoy ejecutando la página Web
 
 const server = app.listen(LISTEN_PORT, () => {
-	console.log(`Servidor NodeJS corriendo en http://localhost:${LISTEN_PORT}/`);
+	console.log(`Servidor NodeJS corriendo en http://10.1.5.133:${LISTEN_PORT}/`);
 });;
 
 const io = require('socket.io')(server, {
 	cors: {
 		// IMPORTANTE: REVISAR PUERTO DEL FRONTEND
-		origin: ['http://localhost:3000',"http://localhost:3001"],            	// Permitir el origen localhost:3000
+		origin: ['http://10.1.5.133:3000',"http://10.1.5.133:3001"],            	// Permitir el origen localhost:3000
 		methods: ["GET", "POST", "PUT", "DELETE"],  	// Métodos permitidos
 		credentials: true                           	// Habilitar el envío de cookies
 	}
@@ -75,7 +75,6 @@ app.post('/login', async function(req,res) {
 		res.send({message: "Usuario o contraseña incorrecta"})
 	} else {
 		res.send({user: result, message: "Inicio de sesión correcto"});
-		//console.log(result)
 	}
 });
 
@@ -90,7 +89,6 @@ app.post('/register', async function(req, res) {
 	} else {
 		res.send({message: 'Usuario agregado a la tabla', user: result2});
 	}
-	//console.log(result2)
 });
 
 app.get('/topScorers', async function(req,res) {
@@ -203,14 +201,11 @@ io.on("connection", (socket) => {
 	});
 
     socket.on("startTimer", () => {
-		console.log("timerrr")
         if (!timerInterval) {
-			console.log("entré en timer interval")
             timerInterval = setInterval(() => {
                 if (timerValue > 0) {
                     timerValue -= 1;
                     io.emit("updateTimer", timerValue);
-					console.log(timerValue)
                 } else {
                     clearInterval(timerInterval);
                     timerInterval = null;
