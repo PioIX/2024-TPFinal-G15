@@ -44,16 +44,12 @@
 
 .topbar {
   display: flex;
-  align-items: center;
-  position: fixed;
+  position: absolute;
   top: 0px;
-  left: 17vw;
-  margin: 0px 0 10px 0;
-  width: 82.85%;
-  justify-content: space-between;
+  left: 84.3%;
+  width: fit-content;
   background-color: rgb(255 255 255 / 30%);
   backdrop-filter: blur(10px);
-  padding: 10px 10px 10px 20px;
 }
 
 .login {

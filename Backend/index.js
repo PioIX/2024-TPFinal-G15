@@ -129,8 +129,10 @@ app.post('/logOut', function(req,res) {
 	}
 	res.send({message: "log out completado", users: datosUsuarios})
 });
-let timerValue = 180; // Valor inicial del contador
+
+let timerValue = 60; // Valor inicial del contador
 let timerInterval = null;
+
 io.on("connection", (socket) => {
 	const req = socket.request;
 
@@ -198,13 +200,7 @@ io.on("connection", (socket) => {
 			datosUsuarios.listoAlumno = false
 		}
 		io.emit('pingPartidaIniciada', { event: "Ping to partida iniciada", info: datosUsuarios });
-		//console.log(datosUsuarios)
-		//console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 	});
-// Backend
-
-
-
 
     socket.on("startTimer", () => {
 		console.log("timerrr")
@@ -222,8 +218,9 @@ io.on("connection", (socket) => {
             }, 1000);
         }
     });
+
 	socket.on("resetTimer", () => {
-		timerValue = 180
+		timerValue = 60
 	});
 
 	socket.on('disconnect', () => {

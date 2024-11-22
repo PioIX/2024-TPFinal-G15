@@ -109,7 +109,7 @@ export default function home() {
         setActualUser([])
         setUserPlayer("")
         setMapaSeleccionado(0)
-        setSeconds(180)
+        setSeconds(60)
         setPlaying(false)
         setActualStudent()
         setActualProfesor()
@@ -131,7 +131,7 @@ export default function home() {
         setListoAlumno(false)
         setUserPlayer("")
         setMapaSeleccionado(0)
-        setSeconds(180)
+        setSeconds(60)
         setPlaying(false)
         setActualStudent()
         setActualProfesor()
@@ -149,7 +149,7 @@ export default function home() {
         setPassword(e.target.value);
     };
     
-    const [seconds, setSeconds] = useState(0); // 3 minutos en segundos
+    const [seconds, setSeconds] = useState(60); // 3 minutos en segundos
     const [contador, setContador] = useState(false)
     const [profesores, setProfesores] = useState([{ name: "Marche", description: "Bondadoso" }, { name: "Facón", description: "Experto en desaprobar alumnos" }, { name: "Rivi", description: "Paciente" }, { name: "Brenda", description: "Experta en Ubuntu" }, { name: "Santi", description: "Pecho frio" }, { name: "Feli", description: "The BOSS" }, { name: "Belu", description: "Chusma" }, { name: "Damatto", description: "Ecologista" }, { name: "Ana", description: "Ama poner partes" }, { name: "Caro Bruno", description: "Gallina" }, { name: "Pablito", description: "Se hace el gorra" }, { name: "Chela", description: "Jardinera" }, { name: "Naddeo", description: "Pruebas más dificiles" }])
     const [alumnos, setAlumnos] = useState([{ name: "Maraval", description: "Pelado insoportable." }, { name: "Lujan", description: "Experta en quejas" }, { name: "Tomi", description: "Pollera" }, { name: "Cachete", description: "Traga" }, { name: "Mica", description: "Gimnasta" }, { name: "May", description: "Gei" }, { name: "Candela", description: "Ex comu" }, { name: "Lucas", description: "Judio" }, { name: "Juan", description: "Golpeado" }, { name: "Agus", description: "El primo" }, { name: "Tomi Beli", description: "Anti Pala" }])
@@ -167,10 +167,10 @@ export default function home() {
     const [playerPoints, setPlayerPoints] = useState(0)
     const [listPlayers, setListPlayers] = useState([])
 
-    const [xPositionProfesor, setXProfesor] = useState(4);
-    const [xPositionStudent, setXStudent] = useState(92);
-    const [yPositionProfesor, setYProfesor] = useState(5);
-    const [yPositionStudent, setYStudent] = useState(84);
+    const [xPositionProfesor, setXProfesor] = useState(1);
+    const [xPositionStudent, setXStudent] = useState(93);
+    const [yPositionProfesor, setYProfesor] = useState(1);
+    const [yPositionStudent, setYStudent] = useState(86);
     const [listo, setListo] = useState(false)
     const [listoProfesor, setListoProfesor] = useState(false);
     const [listoAlumno, setListoAlumno] = useState(false);
@@ -570,20 +570,16 @@ export default function home() {
 
         setListPlayers(result1.list)
     }
-
-    
        
     useEffect(() => {
-        if (socket && contador===true && listoAlumno === true && listoProfesor=== true) {
+        if (socket && contador === true && listoAlumno === true && listoProfesor === true) {
             socket.emit("startTimer"); // Notificar al servidor para iniciar el contador
             console.log("inicié el timer")
         }
-    }, [contador, listoAlumno, listoProfesor]);    
-    useEffect(() => {
-        if (socket && contador===true && listoAlumno === true && listoProfesor=== true){
-             // Conecta al servidor WebSocket
-        
+    }, [contador, listoAlumno, listoProfesor]);
 
+    useEffect(() => {
+        if (socket && contador === true && listoAlumno === true && listoProfesor === true){
             // Escuchar actualizaciones del servidor
             socket.on("updateTimer", (time) => {
                 console.log("time papus")
@@ -596,23 +592,10 @@ export default function home() {
             };}
     }, [contador, listoAlumno, listoProfesor]);
     
-    function resetTimer() {
-    socket.emit("resetTimer")}
-    
-
-
-
-
     //MARK: Contador
-    /*useEffect(() => {
-        if (seconds > 0 && contador === true && listoAlumno === true && listoProfesor === true) {
-            const timer = setInterval(() => {
-                setSeconds(prevSeconds => prevSeconds - 1);
-            }, 1000);
-
-            return () => clearInterval(timer); // Limpiar el intervalo al desmontar
-        }
-    }, [seconds, contador, listoAlumno, listoProfesor]);*/
+    function resetTimer() {
+        socket.emit("resetTimer")
+    }
 
     const formatTime = (sec) => {
         const minutes = Math.floor(sec / 60);
@@ -743,6 +726,29 @@ export default function home() {
             setGame(false)
         }
     }, [xPositionProfesor, yPositionProfesor, xPositionStudent, yPositionStudent, userPlayer])
+
+    useEffect(() => {
+        if (seconds === 0){
+            if (userPlayer === "profesor" && promedio < 6){
+                addScore(10)
+                setPlayerPoints(10)
+                setFinalText("Ganaste")
+            } else if (userPlayer === "student" && promedio < 6) {
+                setPlayerPoints(0)
+                setFinalText("Perdiste")
+                addScore(0)
+            } else if (userPlayer === "student" && promedio >= 6){
+                addScore(10)
+                setPlayerPoints(10)
+                setFinalText("Ganaste")
+            } else if (userPlayer === "profesor" && promedio >= 6) {
+                setPlayerPoints(0)
+                setFinalText("Perdiste")
+                addScore(0)
+            }
+            setGame(false)
+        }
+    }, [seconds, promedio, userPlayer])
   
     //MARK: Socket
     const { socket, isConnected } = useSocket();
