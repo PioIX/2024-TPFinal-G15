@@ -316,17 +316,17 @@ export default function home() {
         if (keyState['S'] || keyState['s'] || keyState['ArrowDown']) {
             if (player == "profesor") {
                 if (pared(xPositionProfesor, yPositionProfesor, "abajo")){
-                    if (yPositionProfesor + 2 < 100 - 11) {
+                    if (yPositionProfesor + 2 < 99 - 11) {
                         setYProfesor(yPositionProfesor + 2)
-                    } else if (yPositionProfesor + 1 < 100 - 11){
+                    } else if (yPositionProfesor + 1 < 99 - 11){
                         setYProfesor(yPositionProfesor + 1)
                     }
                 }
             } else if (player == "student") {
                 if (pared(xPositionStudent, yPositionStudent, "abajo")) {
-                    if (yPositionStudent + 2 < 100 - 11) {
+                    if (yPositionStudent + 2 < 99 - 11) {
                         setYStudent(yPositionStudent + 2)
-                    } else if (yPositionStudent + 1 < 100 - 11){
+                    } else if (yPositionStudent + 1 < 99  - 11){
                         setYStudent(yPositionStudent + 1)
                     }
                 }
