@@ -214,8 +214,8 @@ export default function home() {
                 {xmin: 23, xmax: 58, ymin: 62, ymax: 64, dir: "abajo", name: "abajo izquierda2"},
                 {xmin: 65, xmax: 82, ymin: 72, ymax: 76, dir: "arriba", name: "abajo derecha"},
                 {xmin: 65, xmax: 82, ymin: 62, ymax: 64, dir: "abajo", name: "abajo derecha2"},
-                {xmin: 17, xmax: 19, ymin: 14, ymax: 75, dir: "izquierda", name: "izquierda"},
-                {xmin: 14, xmax: 16, ymin: 14, ymax: 75, dir: "derecha", name: "izquierda2"},
+                {xmin: 17, xmax: 19, ymin: 14, ymax: 74, dir: "izquierda", name: "izquierda"},
+                {xmin: 14, xmax: 16, ymin: 14, ymax: 74, dir: "derecha", name: "izquierda2"},
                 {xmin: 81, xmax: 83, ymin: 14, ymax: 30, dir: "izquierda", name: "derecha arriba"},
                 {xmin: 77, xmax: 79, ymin: 14, ymax: 30, dir: "derecha", name: "derecha arriba2"},
                 {xmin: 81, xmax: 83, ymin: 40, ymax: 75, dir: "izquierda", name: "derecha abajo"},
@@ -232,6 +232,8 @@ export default function home() {
                 {xmin: 63, xmax: 65, ymin: 63, ymax: 75, dir: "derecha", name: "marco4"},
                 {xmin: 54, xmax: 58, ymin: 82, ymax: 84, dir: "arriba", name: "marco5"},
                 {xmin: 24, xmax: 27, ymin: 55, ymax: 57, dir: "abajo", name: "marco6"},
+                {xmin: 14, xmax: 18, ymin: 74, ymax: 76, dir: "arriba", name: "marco7"},
+                {xmin: 45, xmax: 49, ymin: 4, ymax: 6, dir: "abajo", name: "marco8"},
             ]
             for (let x in paredes){
                 console.log(x)
